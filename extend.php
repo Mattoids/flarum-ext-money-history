@@ -9,9 +9,8 @@
  * file that was distributed with this source code.
  */
 
-namespace Mattoid\\MoneyHistory;
-
 use Flarum\Extend;
+use Mattoid\CheckinHistory\Middleware\MoneyMiddleware;
 
 return [
     (new Extend\Frontend('forum'))
@@ -21,4 +20,6 @@ return [
         ->js(__DIR__.'/js/dist/admin.js')
         ->css(__DIR__.'/less/admin.less'),
     new Extend\Locales(__DIR__.'/locale'),
+
+    (new Extend\Middleware("api"))->add(MoneyMiddleware::class),
 ];
