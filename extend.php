@@ -10,7 +10,7 @@
  */
 
 use Flarum\Extend;
-use Mattoid\CheckinHistory\Middleware\MoneyMiddleware;
+use Mattoid\MoneyHistory\Middleware\MoneyMiddleware;
 
 return [
     (new Extend\Frontend('forum'))

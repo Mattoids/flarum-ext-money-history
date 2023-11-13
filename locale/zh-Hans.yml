@@ -1,0 +1,11 @@
+mattoid-money-history:
+  admin:
+    settings:
+      request-type-get: 记录GET请求
+      request-type-get-requirement: 勾选后将记录该类型数据，不建议开启get请求的记录，这回造成系统压力增加
+      request-type-post: 记录POST请求
+      request-type-put: 记录PUT请求
+      request-type-delete: 记录DELETE请求
+      type-requirement: 勾选后将记录该类型数据
+
+  forum:
