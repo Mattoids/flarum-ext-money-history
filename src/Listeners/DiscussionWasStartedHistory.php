@@ -9,7 +9,7 @@ use Flarum\Settings\SettingsRepositoryInterface;
 class DiscussionWasStartedHistory extends HistoryListeners
 {
     protected $source = "DISCUSSIONWASSTARTED";
-    protected $sourceDesc = "";
+    protected $sourceDesc = "发帖奖励";
 
     private $settings;
     private $autoremove;

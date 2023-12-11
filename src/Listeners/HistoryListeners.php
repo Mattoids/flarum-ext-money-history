@@ -18,6 +18,7 @@ abstract class HistoryListeners
         $userMoneyHistory->money = $money > 0 ? $money : -$money;
         $userMoneyHistory->source = $this->source;
         $userMoneyHistory->source_desc = $this->sourceDesc;
+        $userMoneyHistory->balance_money = 0;
         $userMoneyHistory->last_money = $user->money;
         $userMoneyHistory->create_user_id = $user->id;
         $userMoneyHistory->change_time = Date("Y-m-d H:i:s");

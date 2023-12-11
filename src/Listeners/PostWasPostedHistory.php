@@ -9,7 +9,7 @@ use Flarum\Post\Event\Posted;
 class PostWasPostedHistory extends HistoryListeners
 {
     protected $source = "POSTWASPOSTED";
-    protected $sourceDesc = "";
+    protected $sourceDesc = "回帖奖励";
 
     private $settings;
     private $autoremove;
