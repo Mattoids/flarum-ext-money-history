@@ -2,6 +2,7 @@
 
 namespace Mattoid\MoneyHistory\Listeners;
 
+use Illuminate\Support\Arr;
 use Flarum\User\Event\Saving;
 use Flarum\Notification\NotificationSyncer;
 use Flarum\Settings\SettingsRepositoryInterface;
