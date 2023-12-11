@@ -2,19 +2,31 @@
 
 namespace Mattoid\MoneyHistory\Listeners;
 
+use AntoineFr\Money\Listeners\AutoRemoveEnum;
 use Flarum\Notification\NotificationSyncer;
-use Flarum\Post\Event\Restored as PostRestored;
+use Flarum\Discussion\Event\Deleted as DiscussionDeleted;
+use Flarum\Settings\SettingsRepositoryInterface;
 
-class DiscussionWasDeletedHistory
+class DiscussionWasDeletedHistory extends HistoryListeners
 {
-    private $sourceDesc = "帖子恢复";
+    protected $source = "DISCUSSIONWASDELETED";
+    protected $sourceDesc = "";
 
-    public function __construct(NotificationSyncer $notifications)
+    private $settings;
+    private $autoremove;
+
+    public function __construct(NotificationSyncer $notifications, SettingsRepositoryInterface $settings)
     {
+        $this->settings = $settings;
         $this->notifications = $notifications;
+
+        $this->autoremove = (int)$this->settings->get('antoinefr-money.autoremove', 1);
     }
 
-    public function handle(PostRestored $event) {
-
+    public function handle(DiscussionDeleted $event) {
+        if ($this->autoremove == AutoRemoveEnum::DELETED) {
+            $money = (float)$this->settings->get('antoinefr-money.moneyfordiscussion', 0);
+            $this->exec($event->discussion->user, -$money);
+        }
     }
 }

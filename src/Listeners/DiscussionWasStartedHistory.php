@@ -3,18 +3,27 @@
 namespace Mattoid\MoneyHistory\Listeners;
 
 use Flarum\Notification\NotificationSyncer;
-use Flarum\Post\Event\Restored as PostRestored;
+use Flarum\Discussion\Event\Started;
+use Flarum\Settings\SettingsRepositoryInterface;
 
-class DiscussionWasStartedHistory
+class DiscussionWasStartedHistory extends HistoryListeners
 {
-    private $sourceDesc = "帖子恢复";
+    protected $source = "DISCUSSIONWASSTARTED";
+    protected $sourceDesc = "";
 
-    public function __construct(NotificationSyncer $notifications)
+    private $settings;
+    private $autoremove;
+
+    public function __construct(NotificationSyncer $notifications, SettingsRepositoryInterface $settings)
     {
+        $this->settings = $settings;
         $this->notifications = $notifications;
+
+        $this->autoremove = (int)$this->settings->get('antoinefr-money.autoremove', 1);
     }
 
-    public function handle(PostRestored $event) {
-
+    public function handle(Started $event) {
+        $money = (float)$this->settings->get('antoinefr-money.moneyfordiscussion', 0);
+        $this->exec($event->actor, $money);
     }
 }
