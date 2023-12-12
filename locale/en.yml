@@ -1,11 +1,3 @@
 mattoid-money-history:
   admin:
-    settings:
-      request-type-get: GET
-      request-type-get-requirement: After checking, this type of data will be recorded. It is not recommended to enable the recording of get requests, as this will increase system pressure
-      request-type-post: POST
-      request-type-put: PUT
-      request-type-delete: DELETE
-      type-requirement: After checking, this type of data will be recorded
-
   forum:
