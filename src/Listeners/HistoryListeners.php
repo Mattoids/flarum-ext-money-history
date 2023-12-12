@@ -14,11 +14,10 @@ abstract class HistoryListeners
     public function exec(?User $user, $money) {
 
         if ($money > 0 || $money < 0) {
-            $money = $money > 0 ? $money : -$money;
             $userMoneyHistory = new UserMoneyHistory();
             $userMoneyHistory->user_id = $user->id;
             $userMoneyHistory->type = $money > 0 ? "C" : "D";
-            $userMoneyHistory->money = $money;
+            $userMoneyHistory->money = $money > 0 ? $money : -$money;
             $userMoneyHistory->source = $this->source;
             $userMoneyHistory->source_desc = $this->sourceDesc;
             $userMoneyHistory->balance_money = isset($user->init_money) ? $user->init_money : $user->money - $money;
