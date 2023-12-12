@@ -22,7 +22,7 @@ abstract class HistoryListeners
             $userMoneyHistory->source_desc = $this->sourceDesc;
             $userMoneyHistory->balance_money = 0;
             $userMoneyHistory->last_money = $user->money;
-            $userMoneyHistory->create_user_id = $user->id;
+            $userMoneyHistory->create_user_id = $user->create_user_id ? $user->create_user_id : $user->id;
             $userMoneyHistory->change_time = Date("Y-m-d H:i:s");
             $userMoneyHistory->save();
         }
