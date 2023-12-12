@@ -21,10 +21,12 @@ use Flarum\Discussion\Event\Deleted as DiscussionDeleted;
 use Flarum\User\Event\Saving;
 use Flarum\Likes\Event\PostWasLiked;
 use Flarum\Likes\Event\PostWasUnliked;
+use Mattoid\MoneyHistory\Listeners\CheckinSavedHistory;
 use Mattoid\MoneyHistory\Listeners\DiscussionWasDeletedHistory;
 use Mattoid\MoneyHistory\Listeners\DiscussionWasHiddenHistory;
 use Mattoid\MoneyHistory\Listeners\DiscussionWasRestoredHistory;
 use Mattoid\MoneyHistory\Listeners\DiscussionWasStartedHistory;
+use Mattoid\MoneyHistory\Listeners\MoneyHistoryListeners;
 use Mattoid\MoneyHistory\Listeners\PostWasDeletedHistory;
 use Mattoid\MoneyHistory\Listeners\PostWasHiddenHistory;
 use Mattoid\MoneyHistory\Listeners\PostWasLikedHistory;
@@ -33,6 +35,7 @@ use Mattoid\MoneyHistory\Listeners\PostWasRestoredHistory;
 use Mattoid\MoneyHistory\Listeners\PostWasUnlikedHistory;
 use Mattoid\MoneyHistory\Listeners\UserWillBeSavedHistory;
 use Mattoid\MoneyHistory\Middleware\HistoryMiddleware;
+use Mattoid\MoneyHistory\Event\MoneyHistoryEvent;
 
 $extend =  [
     (new Extend\Frontend('forum'))
@@ -54,7 +57,8 @@ $extend =  [
         ->listen(DiscussionRestored::class, DiscussionWasRestoredHistory::class)
         ->listen(DiscussionHidden::class, DiscussionWasHiddenHistory::class)
         ->listen(DiscussionDeleted::class, DiscussionWasDeletedHistory::class)
-        ->listen(Saving::class, UserWillBeSavedHistory::class),
+        ->listen(Saving::class, UserWillBeSavedHistory::class)
+        ->listen(MoneyHistoryEvent::class, MoneyHistoryListeners::class),
 ];
 
 if (class_exists('Flarum\Likes\Event\PostWasLiked')) {
@@ -63,6 +67,12 @@ if (class_exists('Flarum\Likes\Event\PostWasLiked')) {
             ->listen(PostWasLiked::class, PostWasLikedHistory::class)
             ->listen(PostWasUnliked::class, PostWasUnlikedHistory::class)
     ;
+}
+
+if (class_exists('Ziven\checkin\Event\checkinUpdated')) {
+    $extend[] =
+        (new Extend\Event())
+            ->listen(\Ziven\checkin\Event\checkinUpdated::class, CheckinSavedHistory::class);
 }
 
 return $extend;
