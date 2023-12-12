@@ -11,6 +11,8 @@
 
 use Flarum\Extend;
 
+use Mattoid\MoneyHistory\Event\MoneyAllHistoryEvent;
+use Mattoid\MoneyHistory\Listeners\MoneyAllHistoryListeners;
 use Mattoid\MoneyHistory\Listeners\MoneyHistoryListeners;
 use Mattoid\MoneyHistory\Event\MoneyHistoryEvent;
 
@@ -24,5 +26,6 @@ return [
     new Extend\Locales(__DIR__.'/locale'),
 
     (new Extend\Event())
-        ->listen(MoneyHistoryEvent::class, MoneyHistoryListeners::class),
+        ->listen(MoneyHistoryEvent::class, MoneyHistoryListeners::class)
+        ->listen(MoneyAllHistoryEvent::class, MoneyAllHistoryListeners::class),
 ];
