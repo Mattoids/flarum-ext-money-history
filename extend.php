@@ -11,6 +11,7 @@
 
 use Flarum\Extend;
 
+use Mattoid\MoneyHistory\Api\Controller\ListUserMoneyHistoryController;
 use Mattoid\MoneyHistory\Event\MoneyAllHistoryEvent;
 use Mattoid\MoneyHistory\Listeners\MoneyAllHistoryListeners;
 use Mattoid\MoneyHistory\Listeners\MoneyHistoryListeners;
@@ -19,11 +20,15 @@ use Mattoid\MoneyHistory\Event\MoneyHistoryEvent;
 return [
     (new Extend\Frontend('forum'))
         ->js(__DIR__.'/js/dist/forum.js')
-        ->css(__DIR__.'/less/forum.less'),
+        ->css(__DIR__.'/less/forum.less')
+        ->route('/u/{username}/money/history', 'mattoid-money-history.forum.nav'),
     (new Extend\Frontend('admin'))
         ->js(__DIR__.'/js/dist/admin.js')
         ->css(__DIR__.'/less/admin.less'),
     new Extend\Locales(__DIR__.'/locale'),
+
+    (new Extend\Routes('api'))
+        ->get('/users/{id}/money/history', 'money.history', ListUserMoneyHistoryController::class),
 
     (new Extend\Event())
         ->listen(MoneyHistoryEvent::class, MoneyHistoryListeners::class)
