@@ -12,8 +12,8 @@ export default class TransferHistoryListItem extends Component {
     const moneyID = userMoneyHistory.id();
     const moneyUser = userMoneyHistory.user();
     const createUser = userMoneyHistory.createUser();
-    const moneyType = app.translator.trans(userMoneyHistory.type()==='C'?"mattoid-money-history.forum.record.money-out":"mattoid-money-history.forum.record.money-in");
-    const moneyTypeStyle = userMoneyHistory.type()==='C'?"color:red":"color:green";
+    const moneyType = app.translator.trans(userMoneyHistory.type()==='D'?"mattoid-money-history.forum.record.money-out":"mattoid-money-history.forum.record.money-in");
+    const moneyTypeStyle = userMoneyHistory.type()==='D'?"color:red":"color:green";
 
     return (
       <div className="transferHistoryContainer">
