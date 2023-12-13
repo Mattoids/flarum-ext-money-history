@@ -4,6 +4,7 @@ namespace Mattoid\MoneyHistory\model;
 
 use Flarum\Database\AbstractModel;
 use Flarum\Formatter\Formatter;
+use Flarum\User\User;
 
 class UserMoneyHistory extends AbstractModel
 {
@@ -34,5 +35,13 @@ class UserMoneyHistory extends AbstractModel
     public static function setFormatter(Formatter $formatter)
     {
         static::$formatter = $formatter;
+    }
+
+    public function User(){
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
+    public function createUser(){
+        return $this->hasOne(User::class, 'id', 'create_user_id');
     }
 }

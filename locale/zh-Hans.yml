@@ -3,3 +3,16 @@ mattoid-money-history:
   forum:
     nav: 资金记录
     title: 资金交易记录
+    list-empty: 没有找到记录
+    money-list-load-more: 读取更多
+    record:
+      from: 来自
+      money-out: 扣费
+      money-in: 奖励
+      money-list-type: 类型
+      money-list-assign-at: 时间
+      money-list-id: ID
+      money-list-from-user: 操作人
+      money-list-target-user: 操作账户
+      money-list-amount: 金额
+      money-list-transfer-notes: 资金用途

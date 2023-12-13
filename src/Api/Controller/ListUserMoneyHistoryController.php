@@ -3,42 +3,60 @@
 namespace Mattoid\MoneyHistory\Api\Controller;
 
 use Flarum\Api\Controller\AbstractListController;
-use Flarum\Http\RequestUtil;
 use Flarum\User\UserRepository;
-use Illuminate\Support\Arr;
 use Mattoid\MoneyHistory\Api\Serializer\MoneyHistorySerializer;
 use Mattoid\MoneyHistory\model\UserMoneyHistory;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
+use Flarum\Http\UrlGenerator;
 
 class ListUserMoneyHistoryController extends AbstractListController
 {
+    protected $url;
     public $serializer = MoneyHistorySerializer::class;
 
     public $include = [
-        'post.discussion',
-        'giver',
-        'receiver',
+        'user',
+        'createUser'
     ];
 
     protected $repository;
 
-    public function __construct(UserRepository $repository)
+    public function __construct(UserRepository $repository, UrlGenerator $url)
     {
+        $this->url = $url;
         $this->repository = $repository;
     }
 
     protected function data(ServerRequestInterface $request, Document $document)
     {
-        $actor = RequestUtil::getActor($request);
+        $params = $request->getQueryParams();
+        $actor = $request->getAttribute('actor');
+        $limit = $this->extractLimit($request);
+        $offset = $this->extractOffset($request);
 
-        $user = $this->repository->findOrFail(Arr::get($request->getQueryParams(), 'id'), $actor);
-
-//        $actor->assertCan('seeMoneyRewardHistory', $user);
-
-        return UserMoneyHistory::query()
-            ->where('user_id', $user->id)
-            ->orderBy('change_time', 'desc')
+        $userID = $actor->id;
+        $moneyHistoryQuery = UserMoneyHistory::query()->where(["user_id"=>$userID]);
+        $MoneyHistoryResult = $moneyHistoryQuery
+            ->skip($offset)
+            ->take($limit + 1)
+            ->orderBy('id', 'desc')
             ->get();
+
+        $hasMoreResults = $limit > 0 && $MoneyHistoryResult->count() > $limit;
+
+        if($hasMoreResults){
+            $MoneyHistoryResult->pop();
+        }
+
+        $document->addPaginationLinks(
+            $this->url->to('api')->route('user.money.history', ['id' => $userID]),
+            $params,
+            $offset,
+            $limit,
+            $hasMoreResults ? null : 0
+        );
+
+        return $MoneyHistoryResult;
     }
 }

@@ -28,7 +28,7 @@ return [
     new Extend\Locales(__DIR__.'/locale'),
 
     (new Extend\Routes('api'))
-        ->get('/users/{id}/money/history', 'money.history', ListUserMoneyHistoryController::class),
+        ->get('/users/{id}/money/history', 'user.money.history', ListUserMoneyHistoryController::class),
 
     (new Extend\Event())
         ->listen(MoneyHistoryEvent::class, MoneyHistoryListeners::class)

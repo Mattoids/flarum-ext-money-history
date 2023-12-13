@@ -12,6 +12,7 @@
 namespace Mattoid\MoneyHistory\Api\Serializer;
 
 use Flarum\Api\Serializer\AbstractSerializer;
+use Flarum\Api\Serializer\BasicUserSerializer;
 use Flarum\Api\Serializer\PostSerializer;
 use Flarum\Post\Post;
 use Flarum\Settings\SettingsRepositoryInterface;
@@ -19,7 +20,7 @@ use Mattoid\MoneyHistory\model\UserMoneyHistory;
 
 class MoneyHistorySerializer extends AbstractSerializer
 {
-    protected $type = 'checkin.history';
+    protected $type = 'user.money.history';
     protected $settings;
 
     public function __construct(SettingsRepositoryInterface $settings)
@@ -35,20 +36,20 @@ class MoneyHistorySerializer extends AbstractSerializer
         return [
             'id' => $money->id,
             'user_id' => $money->user_id,
-            'type' => $money->type === 'C' ? '奖励' : '扣除',
+            'type' => $money->type,
             'money' => $money->money,
             'source_desc' => $money->source_desc,
             'change_time' => $money->change_time,
+            'create_user' => $money->createUser(),
+            'create_user_id' => $money->create_user_id,
         ];
     }
 
-    protected function format($text)
-    {
-        return UserMoneyHistory::getFormatter()->render($text, new Post());
+    protected function user($transferHistory){
+        return $this->hasOne($transferHistory, BasicUserSerializer::class);
     }
 
-    protected function post($history)
-    {
-        return $this->hasOne($history, PostSerializer::class);
+    protected function createUser($transferHistory){
+        return $this->hasOne($transferHistory, BasicUserSerializer::class);
     }
 }
