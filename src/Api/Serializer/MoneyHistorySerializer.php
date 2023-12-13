@@ -20,36 +20,27 @@ use Mattoid\MoneyHistory\model\UserMoneyHistory;
 
 class MoneyHistorySerializer extends AbstractSerializer
 {
-    protected $type = 'user.money.history';
-    protected $settings;
+    protected $type = 'userMoneyHistory';
 
-    public function __construct(SettingsRepositoryInterface $settings)
-    {
-        $this->settings = $settings;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getDefaultAttributes($money)
-    {
-        return [
-            'id' => $money->id,
-            'user_id' => $money->user_id,
-            'type' => $money->type,
-            'money' => $money->money,
-            'source_desc' => $money->source_desc,
-            'change_time' => $money->change_time,
-            'create_user' => $money->createUser(),
-            'create_user_id' => $money->create_user_id,
+    protected function getDefaultAttributes($data){
+        $attributes = [
+            'id' => $data->id,
+            'type' => $data->type,
+            'money' => $data->money,
+            'user_id' => $data->user_id,
+            'source_desc' => $data->source_desc,
+            'create_user_id' => $data->create_user_id,
+            'change_time' => date("Y-m-d H:i:s", strtotime($data->change_time))
         ];
+
+        return $attributes;
     }
 
-    protected function user($transferHistory){
-        return $this->hasOne($transferHistory, BasicUserSerializer::class);
+    protected function User($moneyHistory){
+        return $this->hasOne($moneyHistory, BasicUserSerializer::class);
     }
 
-    protected function createUser($transferHistory){
-        return $this->hasOne($transferHistory, BasicUserSerializer::class);
+    protected function createUser($moneyHistory){
+        return $this->hasOne($moneyHistory, BasicUserSerializer::class);
     }
 }

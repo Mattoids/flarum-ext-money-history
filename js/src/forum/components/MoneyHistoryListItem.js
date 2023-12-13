@@ -5,15 +5,15 @@ import username from "flarum/helpers/username";
 
 export default class TransferHistoryListItem extends Component {
   view() {
-    const {moneyHistory} = this.attrs;
-    const changeTime = moneyHistory.change_time;
-    const money = moneyHistory.attributes.money;
-    const sourceDesc = moneyHistory.attributes.source_desc;
-    const moneyID = moneyHistory.attributes.id;
-    const moneyUser = app.session.user;
-    const createUser = '';
-    const moneyType = app.translator.trans(moneyHistory.attributes.type==='C'?"mattoid-money-history.forum.record.money-out":"mattoid-money-history.forum.record.money-in");
-    const moneyTypeStyle = moneyHistory.attributes.type==='C'?"color:red":"color:green";
+    const {userMoneyHistory} = this.attrs;
+    const changeTime = userMoneyHistory.changeTime();
+    const money = userMoneyHistory.money();
+    const sourceDesc = userMoneyHistory.sourceDesc();
+    const moneyID = userMoneyHistory.id();
+    const moneyUser = userMoneyHistory.user();
+    const createUser = userMoneyHistory.createUser();
+    const moneyType = app.translator.trans(userMoneyHistory.type()==='C'?"mattoid-money-history.forum.record.money-out":"mattoid-money-history.forum.record.money-in");
+    const moneyTypeStyle = userMoneyHistory.type()==='C'?"color:red":"color:green";
 
     return (
       <div className="transferHistoryContainer">

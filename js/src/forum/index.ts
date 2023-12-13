@@ -3,10 +3,10 @@ import { extend } from 'flarum/common/extend';
 import UserPage from 'flarum/forum/components/UserPage';
 import LinkButton from 'flarum/common/components/LinkButton';
 import MoneyHistoryPage from './components/MoneyHistoryPage';
-import MoneyHistory from "./models/MoneyHistory";
+import UserMoneyHistory from "./models/UserMoneyHistory";
 
 app.initializers.add('flarum-ext-money-history', () => {
-  app.store.models.moneyHistory = MoneyHistory;
+  app.store.models.userMoneyHistory = UserMoneyHistory;
 
   app.routes.userMoneyHistory = {
     path: '/u/:username/money/history',
@@ -19,7 +19,7 @@ app.initializers.add('flarum-ext-money-history', () => {
     }
 
 
-    items.add('moneyHistory', LinkButton.component({
+    items.add('userMoneyHistory', LinkButton.component({
       href: app.route('userMoneyHistory', {
         username: app.session.user.username(),
       }),
