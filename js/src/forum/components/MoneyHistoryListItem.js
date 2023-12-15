@@ -40,7 +40,7 @@ export default class TransferHistoryListItem extends Component {
           <b>{app.translator.trans('mattoid-money-history.forum.record.money-list-amount')}: </b>
           {money}
 
-          <span>|&nbsp;
+          <span>&nbsp;|&nbsp;
             <b>{app.translator.trans('mattoid-money-history.forum.record.money-list-transfer-notes')}: </b>
             {sourceDesc}
           </span>
