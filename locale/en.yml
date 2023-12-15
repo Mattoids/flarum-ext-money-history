@@ -16,3 +16,4 @@ mattoid-money-history:
       money-list-target-user: Operation account
       money-list-amount: amount
       money-list-transfer-notes: purpose
+      money-list-balance: balance

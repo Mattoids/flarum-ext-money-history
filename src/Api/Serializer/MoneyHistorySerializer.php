@@ -29,6 +29,8 @@ class MoneyHistorySerializer extends AbstractSerializer
             'money' => $data->money,
             'user_id' => $data->user_id,
             'source_desc' => $data->source_desc,
+            'last_money' => $data->last_money,
+            'balance_money' => $data->balance_money,
             'create_user_id' => $data->create_user_id,
             'change_time' => date("Y-m-d H:i:s", strtotime($data->change_time))
         ];

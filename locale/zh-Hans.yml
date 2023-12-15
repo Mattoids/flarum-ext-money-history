@@ -16,3 +16,4 @@ mattoid-money-history:
       money-list-target-user: 操作账户
       money-list-amount: 金额
       money-list-transfer-notes: 资金用途
+      money-list-balance: 余额变动

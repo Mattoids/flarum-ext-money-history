@@ -12,6 +12,8 @@ export default class TransferHistoryListItem extends Component {
     const moneyID = userMoneyHistory.id();
     const moneyUser = userMoneyHistory.user();
     const createUser = userMoneyHistory.createUser();
+    const balanceMoney = userMoneyHistory.balanceMoney();
+    const lastMoney = userMoneyHistory.lastMoney();
     const moneyType = app.translator.trans(userMoneyHistory.type()==='D'?"mattoid-money-history.forum.record.money-out":"mattoid-money-history.forum.record.money-in");
     const moneyTypeStyle = userMoneyHistory.type()==='D'?"color:red":"color:green";
 
@@ -32,15 +34,11 @@ export default class TransferHistoryListItem extends Component {
           <Link href="#" className="moneyHistoryUser" style="color:var(--heading-color)">
             {avatar(createUser)} {username(createUser)}
           </Link>&nbsp;|&nbsp;
-
-          <b>{app.translator.trans('mattoid-money-history.forum.record.money-list-target-user')}: </b>
-          <Link href="#" className="moneyHistoryUser" style="color:var(--heading-color)">
-            {avatar(moneyUser)} {username(moneyUser)}
-          </Link>&nbsp;|&nbsp;
           <b>{app.translator.trans('mattoid-money-history.forum.record.money-list-amount')}: </b>
-          {money}
-
-          <span>&nbsp;|&nbsp;
+          {money}&nbsp;|&nbsp;
+          <b>{app.translator.trans('mattoid-money-history.forum.record.money-list-balance')}: </b>
+          {balanceMoney}&nbsp;→&nbsp;{lastMoney}&nbsp;|&nbsp;
+          <span>
             <b>{app.translator.trans('mattoid-money-history.forum.record.money-list-transfer-notes')}: </b>
             {sourceDesc}
           </span>
