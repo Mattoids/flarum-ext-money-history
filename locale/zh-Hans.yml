@@ -1,5 +1,7 @@
 mattoid-money-history:
   admin:
+    settings:
+      query-others-history: 查看他人记录
   forum:
     nav: 资金记录
     title: 资金交易记录

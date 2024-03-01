@@ -1,5 +1,7 @@
 mattoid-money-history:
   admin:
+    settings:
+      query-others-history: View Others' Records
   forum:
     nav: money history
     title: money history
