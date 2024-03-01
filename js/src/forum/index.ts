@@ -14,14 +14,16 @@ app.initializers.add('flarum-ext-money-history', () => {
   };
 
   extend(UserPage.prototype, 'navItems', function (items) {
-    if (!app.session.user) {
-      return;
+    if (app.session.user.id() !== this.user.id()) {
+      if (!this.user || !this.user.attribute('canQueryOthersHistory')) {
+        return;
+      }
     }
 
 
     items.add('userMoneyHistory', LinkButton.component({
       href: app.route('userMoneyHistory', {
-        username: app.session.user.username(),
+        username: this.user.slug(),
       }),
       icon: 'fas fa-money-bill',
     }, app.translator.trans('mattoid-money-history.forum.nav')));

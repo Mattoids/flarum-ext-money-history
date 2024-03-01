@@ -1,5 +1,12 @@
 import app from 'flarum/admin/app';
 
 app.initializers.add('mattoid/flarum-ext-money-history', () => {
-  console.log('[mattoid/flarum-ext-money-history] Hello, forum and admin!');
+  app.extensionData.for("mattoid-money-history")
+  .registerPermission(
+    {
+      icon: 'fas fa-id-card',
+      label: app.translator.trans('mattoid-money-history.admin.settings.query-others-history'),
+      permission: 'money-history.queryOthersMoneyHistory',
+      allowGuest: true
+    }, 'view')
 });

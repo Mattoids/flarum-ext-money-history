@@ -7,6 +7,7 @@ use Flarum\User\UserRepository;
 use Mattoid\MoneyHistory\Api\Serializer\MoneyHistorySerializer;
 use Mattoid\MoneyHistory\model\UserMoneyHistory;
 use Psr\Http\Message\ServerRequestInterface;
+use Illuminate\Support\Arr;
 use Tobscure\JsonApi\Document;
 use Flarum\Http\UrlGenerator;
 
@@ -35,8 +36,11 @@ class ListUserMoneyHistoryController extends AbstractListController
         $limit = $this->extractLimit($request);
         $offset = $this->extractOffset($request);
 
-        $userID = $actor->id;
-        $moneyHistoryQuery = UserMoneyHistory::query()->where(["user_id"=>$userID]);
+        $userId = Arr::get($request->getQueryParams(), 'id');
+        if (!$userId) {
+            $userId = $actor->id;
+        }
+        $moneyHistoryQuery = UserMoneyHistory::query()->where(["user_id"=>$userId]);
         $MoneyHistoryResult = $moneyHistoryQuery
             ->skip($offset)
             ->take($limit + 1)
@@ -50,7 +54,7 @@ class ListUserMoneyHistoryController extends AbstractListController
         }
 
         $document->addPaginationLinks(
-            $this->url->to('api')->route('user.money.history', ['id' => $userID]),
+            $this->url->to('api')->route('user.money.history', ['id' => $userId]),
             $params,
             $offset,
             $limit,

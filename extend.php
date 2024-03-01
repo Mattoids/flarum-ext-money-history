@@ -10,8 +10,10 @@
  */
 
 use Flarum\Extend;
+use Flarum\Api\Serializer\BasicUserSerializer;
 
 use Mattoid\MoneyHistory\Api\Controller\ListUserMoneyHistoryController;
+use Mattoid\MoneyHistory\Attributes\UserAttributes;
 use Mattoid\MoneyHistory\Event\MoneyAllHistoryEvent;
 use Mattoid\MoneyHistory\Listeners\MoneyAllHistoryListeners;
 use Mattoid\MoneyHistory\Listeners\MoneyHistoryListeners;
@@ -26,6 +28,9 @@ return [
         ->js(__DIR__.'/js/dist/admin.js')
         ->css(__DIR__.'/less/admin.less'),
     new Extend\Locales(__DIR__.'/locale'),
+
+    (new Extend\ApiSerializer(BasicUserSerializer::class))
+        ->attributes(UserAttributes::class),
 
     (new Extend\Routes('api'))
         ->get('/users/{id}/money/history', 'user.money.history', ListUserMoneyHistoryController::class),
