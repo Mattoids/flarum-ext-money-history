@@ -16,6 +16,8 @@ This extension has been developed and tested only on Chinese forums and did not 
 本插件仅在中文论坛上进行开发与测试，并未考虑到在论坛上同时存在多种语言的情况，因此在多语言论坛上可能存在问题。欢迎PR！😊
 
 ## Screenshots
+![YC3SWVB3DL$YERVVRTFOIQ1](https://github.com/huoxin233/flarum-ext-money-history/assets/23447157/6132bc75-f33f-4818-8c19-e413834dde1f)
+![RUO SWWVYBPMG~8{Z({UU$6](https://github.com/huoxin233/flarum-ext-money-history/assets/23447157/d7ce3ad7-7912-4a2f-af4e-8b24219ba5fc)
 
 ## Installation
 
