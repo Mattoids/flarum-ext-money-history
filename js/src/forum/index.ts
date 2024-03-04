@@ -15,7 +15,7 @@ app.initializers.add('flarum-ext-money-history', () => {
 
   extend(UserPage.prototype, 'navItems', function (items) {
     if (app.session.user.id() !== this.user.id()) {
-      if (!this.user || !this.user.attribute('canQueryOthersHistory')) {
+      if (!this.user || !this.user.attribute('canQueryOthersMoneyHistory')) {
         return;
       }
     }
