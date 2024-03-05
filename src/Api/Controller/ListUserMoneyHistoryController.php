@@ -2,6 +2,7 @@
 
 namespace Mattoid\MoneyHistory\Api\Controller;
 
+use Flarum\Locale\Translator;
 use Flarum\Api\Controller\AbstractListController;
 use Flarum\User\UserRepository;
 use Mattoid\MoneyHistory\Api\Serializer\MoneyHistorySerializer;
