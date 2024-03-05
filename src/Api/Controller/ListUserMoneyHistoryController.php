@@ -22,10 +22,12 @@ class ListUserMoneyHistoryController extends AbstractListController
     ];
 
     protected $repository;
+    protected $translator;
 
-    public function __construct(UserRepository $repository, UrlGenerator $url)
+    public function __construct(UserRepository $repository, UrlGenerator $url, Translator $translator)
     {
         $this->url = $url;
+        $this->translator = $translator;
         $this->repository = $repository;
     }
 
@@ -60,6 +62,12 @@ class ListUserMoneyHistoryController extends AbstractListController
             $limit,
             $hasMoreResults ? null : 0
         );
+
+        foreach ($MoneyHistoryResult as $key => $value) {
+            if ($value->source_key) {
+                $value->source_desc = $this->translator->trans($value->source_key);
+            }
+        }
 
         return $MoneyHistoryResult;
     }

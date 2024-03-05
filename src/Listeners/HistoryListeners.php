@@ -9,6 +9,7 @@ abstract class HistoryListeners
 {
 
     protected $source;
+    protected $sourceKey;
     protected $sourceDesc;
 
     public function exec(?User $user, $money) {
@@ -19,6 +20,7 @@ abstract class HistoryListeners
             $userMoneyHistory->type = $money > 0 ? "C" : "D";
             $userMoneyHistory->money = $money > 0 ? $money : -$money;
             $userMoneyHistory->source = $this->source;
+            $userMoneyHistory->source_key = $this->sourceKey;
             $userMoneyHistory->source_desc = $this->sourceDesc;
             $userMoneyHistory->balance_money = isset($user->init_money) ? $user->init_money : $user->money - $money;
             $userMoneyHistory->last_money = $user->money;
