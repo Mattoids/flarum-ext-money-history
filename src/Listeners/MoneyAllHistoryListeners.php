@@ -2,6 +2,8 @@
 
 namespace Mattoid\MoneyHistory\Listeners;
 
+use Carbon\Carbon;
+use Flarum\Settings\SettingsRepositoryInterface;
 use Mattoid\MoneyHistory\Event\MoneyAllHistoryEvent;
 use Mattoid\MoneyHistory\model\UserMoneyHistory;
 
@@ -10,8 +12,13 @@ class MoneyAllHistoryListeners extends HistoryListeners
     protected $source;
     protected $sourceKey;
     protected $sourceDesc;
+    private $storeTimezone;
 
     public function handle(MoneyAllHistoryEvent $event) {
+        $settings = resolve(SettingsRepositoryInterface::class);
+        $storeTimezone = $settings->get('money-history.storeTimezone', 'Asia/Shanghai');
+        $this->storeTimezone = !!$storeTimezone ? $storeTimezone : 'Asia/Shanghai';
+
         $this->source = $event->source;
         $this->sourceDesc = $event->sourceDesc;
         $insert = [];
@@ -27,7 +34,7 @@ class MoneyAllHistoryListeners extends HistoryListeners
                 "balance_money" => isset($item->init_money) ? $item->init_money : $item->money - $event->money,
                 "last_money" => $event->money,
                 "create_user_id" => isset($item->create_user_id) ? $item->create_user_id : $item->id,
-                "change_time" => Date("Y-m-d H:i:s")
+                "change_time" => Carbon::now()->tz($this->storeTimezone)
             ];
         }
 

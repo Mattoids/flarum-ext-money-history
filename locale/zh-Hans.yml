@@ -2,6 +2,8 @@ mattoid-money-history:
   admin:
     settings:
       query-others-history: 查看他人记录
+      store-timezone: 时区
+      store-timezone-help: 配置时区，默认 Asia/Shanghai
   forum:
     nav: 资金记录
     title: 资金交易记录
