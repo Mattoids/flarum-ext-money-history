@@ -36,8 +36,8 @@ class MoneyHistorySerializer extends AbstractSerializer
             'source_desc' => $data->source_desc,
             'last_money' => $data->last_money,
             'balance_money' => $data->balance_money,
-            'create_user_id' => $data->create_user_id,
-            'change_time' => Carbon::parse($this->storeTimezone)->tz($this->storeTimezone)->format('Y-m-d H:i:s'),
+//            'create_user_id' => $data->create_user_id,
+            'change_time' => Carbon::parse($data->change_time)->format('Y-m-d H:i:s'),
         ];
 
         return $attributes;
