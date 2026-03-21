@@ -9,7 +9,7 @@ class UserAttributes
 {
     public function __invoke(BasicUserSerializer $serializer, User $user): array
     {
-        if ($serializer->getActor()->cannot('queryOthersMoneyHistory', $user)) {
+        if ($serializer->getActor()->cannot('money-history.queryOthersMoneyHistory')) {
             return [];
         }
 

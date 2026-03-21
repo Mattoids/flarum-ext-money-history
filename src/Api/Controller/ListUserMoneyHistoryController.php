@@ -41,7 +41,12 @@ class ListUserMoneyHistoryController extends AbstractListController
 
         $userId = Arr::get($request->getQueryParams(), 'id');
         if (!$userId) {
+            $actor->assertRegistered();
             $userId = $actor->id;
+        } else {
+            if ($actor->id != $userId) {
+                $actor->assertCan('money-history.queryOthersMoneyHistory');
+            }
         }
         $moneyHistoryQuery = UserMoneyHistory::query()->where(["user_id"=>$userId]);
         $MoneyHistoryResult = $moneyHistoryQuery
