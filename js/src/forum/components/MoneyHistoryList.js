@@ -5,7 +5,7 @@ import Button from "flarum/components/Button";
 
 import MoneyHistoryListItem from "./MoneyHistoryListItem";
 
-export default class TransferHistoryList extends Component {
+export default class MoneyHistoryList extends Component {
   oninit(vnode) {
     super.oninit(vnode);
     this.loading = true;

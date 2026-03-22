@@ -3,7 +3,7 @@ import Link from "flarum/components/Link";
 import avatar from "flarum/helpers/avatar";
 import username from "flarum/helpers/username";
 
-export default class TransferHistoryListItem extends Component {
+export default class MoneyHistoryListItem extends Component {
   view() {
     const {userMoneyHistory} = this.attrs;
     const createdAt = userMoneyHistory.createdAt();
