@@ -6,25 +6,25 @@ import username from "flarum/helpers/username";
 export default class TransferHistoryListItem extends Component {
   view() {
     const {userMoneyHistory} = this.attrs;
-    const changeTime = userMoneyHistory.changeTime();
+    const createdAt = userMoneyHistory.createdAt();
     const money = userMoneyHistory.money();
     const sourceDesc = userMoneyHistory.sourceDesc();
     const moneyID = userMoneyHistory.id();
     const moneyUser = userMoneyHistory.user();
-    const createUser = userMoneyHistory.createUser();
-    const balanceMoney = userMoneyHistory.balanceMoney();
-    const lastMoney = userMoneyHistory.lastMoney();
+    const actor = userMoneyHistory.actor();
+    const balanceBefore = userMoneyHistory.balanceBefore();
+    const balanceAfter = userMoneyHistory.balanceAfter();
     const moneyType = app.translator.trans(userMoneyHistory.type()==='D'?"mattoid-money-history.forum.record.money-out":"mattoid-money-history.forum.record.money-in");
     const moneyTypeStyle = userMoneyHistory.type()==='D'?"color:red":"color:green";
 
     return (
-      <div className="transferHistoryContainer">
+      <div className="moneyHistoryContainer">
         <div style="padding-top: 5px;">
           <b>{app.translator.trans('mattoid-money-history.forum.record.money-list-type')}: </b>
           <span style={moneyTypeStyle}>{moneyType}</span>&nbsp;|&nbsp;
 
           <b>{app.translator.trans('mattoid-money-history.forum.record.money-list-assign-at')}: </b>
-          {changeTime}
+          {createdAt}
         </div>
 
         <div style="padding-top: 5px;">
@@ -32,12 +32,12 @@ export default class TransferHistoryListItem extends Component {
           {moneyID}&nbsp;|&nbsp;
           <b>{app.translator.trans('mattoid-money-history.forum.record.money-list-from-user')}: </b>
           <Link href="#" className="moneyHistoryUser" style="color:var(--heading-color)">
-            {avatar(createUser)} {username(createUser)}
+            {avatar(actor)} {username(actor)}
           </Link>&nbsp;|&nbsp;
           <b>{app.translator.trans('mattoid-money-history.forum.record.money-list-amount')}: </b>
           {money}&nbsp;|&nbsp;
           <b>{app.translator.trans('mattoid-money-history.forum.record.money-list-balance')}: </b>
-          {balanceMoney}&nbsp;→&nbsp;{lastMoney}&nbsp;|&nbsp;
+          {balanceBefore}&nbsp;→&nbsp;{balanceAfter}&nbsp;|&nbsp;
           <span>
             <b>{app.translator.trans('mattoid-money-history.forum.record.money-list-transfer-notes')}: </b>
             {sourceDesc}

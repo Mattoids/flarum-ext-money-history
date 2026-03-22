@@ -23,7 +23,8 @@ class MoneyHistorySerializer extends AbstractSerializer
     protected $type = 'userMoneyHistory';
     private $storeTimezone;
 
-    protected function getDefaultAttributes($data){
+    protected function getDefaultAttributes($data)
+    {
         $settings = resolve(SettingsRepositoryInterface::class);
         $storeTimezone = $settings->get('money-history.storeTimezone', 'Asia/Shanghai');
         $this->storeTimezone = !!$storeTimezone ? $storeTimezone : 'Asia/Shanghai';
@@ -34,20 +35,22 @@ class MoneyHistorySerializer extends AbstractSerializer
             'money' => $data->money,
             'user_id' => $data->user_id,
             'source_desc' => $data->source_desc,
-            'last_money' => $data->last_money,
-            'balance_money' => $data->balance_money,
-//            'create_user_id' => $data->create_user_id,
-            'change_time' => Carbon::parse($data->change_time)->format('Y-m-d H:i:s'),
+            'balance_after' => $data->balance_after,
+            'balance_before' => $data->balance_before,
+            // 'actor_id' => $data->actor_id,
+            'created_at' => Carbon::parse($data->created_at)->format('Y-m-d H:i:s'),
         ];
 
         return $attributes;
     }
 
-    protected function user($moneyHistory){
+    protected function user($moneyHistory)
+    {
         return $this->hasOne($moneyHistory, BasicUserSerializer::class);
     }
 
-    protected function createUser($moneyHistory){
+    protected function actor($moneyHistory)
+    {
         return $this->hasOne($moneyHistory, BasicUserSerializer::class);
     }
 }

@@ -22,24 +22,23 @@ class MoneyAllHistoryListener extends BaseHistoryListener
 
         $this->source = $event->source;
         $this->sourceDesc = $event->sourceDesc;
-        $insert = [];
 
         if ($event->money != 0) {
             $insertList = array();
             foreach ($event->list as $item) {
-                $create_user_id = $event->actor ? $event->actor->id : (isset($item->create_user_id) ? $item->create_user_id : $item->id);
+                $actorId = $event->actor ? $event->actor->id : $item->id;
 
                 $insertList[] = array(
                     "user_id" => $item->id,
                     "type" => $event->money > 0 ? "C" : "D",
                     "money" => $event->money,
-                    "balance_money" => $item->money - $event->money,
-                    "last_money" => $item->money,
+                    "balance_before" => $item->money - $event->money,
+                    "balance_after" => $item->money,
                     "source" => $event->source,
                     "source_key" => $event->sourceKey,
                     "source_desc" => $event->sourceDesc,
-                    "create_user_id" => $create_user_id,
-                    "change_time" => Carbon::now()->tz($this->storeTimezone),
+                    "actor_id" => $actorId,
+                    "created_at" => Carbon::now()->tz($this->storeTimezone),
                 );
             }
             UserMoneyHistory::query()->insert($insertList);

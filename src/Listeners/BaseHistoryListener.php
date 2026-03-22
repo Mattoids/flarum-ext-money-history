@@ -28,10 +28,10 @@ abstract class BaseHistoryListener
             $userMoneyHistory->source = $this->source;
             $userMoneyHistory->source_key = $this->sourceKey;
             $userMoneyHistory->source_desc = $this->sourceDesc;
-            $userMoneyHistory->balance_money = isset($event->oldBalance) ? $event->oldBalance : $user->money - $money;
-            $userMoneyHistory->last_money = isset($event->oldBalance) ? $event->oldBalance + $money : $user->money;
-            $userMoneyHistory->create_user_id = isset($user->create_user_id) ? $user->create_user_id : $user->id;
-            $userMoneyHistory->change_time = Carbon::now()->tz($this->storeTimezone);
+            $userMoneyHistory->balance_before = isset($event->oldBalance) ? $event->oldBalance : $user->money - $money;
+            $userMoneyHistory->balance_after = isset($event->oldBalance) ? $event->oldBalance + $money : $user->money;
+            $userMoneyHistory->actor_id = $event?->actor?->id ?? $user->id;
+            $userMoneyHistory->created_at = Carbon::now()->tz($this->storeTimezone);
             $userMoneyHistory->save();
         }
     }

@@ -19,7 +19,7 @@ class ListUserMoneyHistoryController extends AbstractListController
 
     public $include = [
         'user',
-        'createUser'
+        'actor'
     ];
 
     protected $translator;
