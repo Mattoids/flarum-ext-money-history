@@ -7,9 +7,8 @@ use Flarum\User\User;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Mattoid\MoneyHistory\model\UserMoneyHistory;
 
-abstract class HistoryListeners
+abstract class BaseHistoryListener
 {
-
     protected $source;
     protected $sourceKey;
     protected $sourceDesc;
@@ -36,5 +35,4 @@ abstract class HistoryListeners
             $userMoneyHistory->save();
         }
     }
-
 }

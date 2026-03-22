@@ -7,7 +7,7 @@ use Flarum\Settings\SettingsRepositoryInterface;
 use Mattoid\MoneyHistory\Event\MoneyAllHistoryEvent;
 use Mattoid\MoneyHistory\model\UserMoneyHistory;
 
-class MoneyAllHistoryListeners extends HistoryListeners
+class MoneyAllHistoryListener extends BaseHistoryListener
 {
     protected $source;
     protected $sourceKey;

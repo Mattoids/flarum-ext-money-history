@@ -15,8 +15,8 @@ use Flarum\Api\Serializer\BasicUserSerializer;
 use Mattoid\MoneyHistory\Api\Controller\ListUserMoneyHistoryController;
 use Mattoid\MoneyHistory\Attributes\UserAttributes;
 use Mattoid\MoneyHistory\Event\MoneyAllHistoryEvent;
-use Mattoid\MoneyHistory\Listeners\MoneyAllHistoryListeners;
-use Mattoid\MoneyHistory\Listeners\MoneyHistoryListeners;
+use Mattoid\MoneyHistory\Listeners\MoneyAllHistoryListener;
+use Mattoid\MoneyHistory\Listeners\MoneyHistoryListener;
 use Mattoid\MoneyHistory\Event\MoneyHistoryEvent;
 
 return [
@@ -36,6 +36,6 @@ return [
         ->get('/users/{id}/money/history', 'user.money.history', ListUserMoneyHistoryController::class),
 
     (new Extend\Event())
-        ->listen(MoneyHistoryEvent::class, MoneyHistoryListeners::class)
-        ->listen(MoneyAllHistoryEvent::class, MoneyAllHistoryListeners::class),
+        ->listen(MoneyHistoryEvent::class, MoneyHistoryListener::class)
+        ->listen(MoneyAllHistoryEvent::class, MoneyAllHistoryListener::class),
 ];

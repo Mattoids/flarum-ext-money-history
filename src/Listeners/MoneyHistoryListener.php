@@ -4,7 +4,7 @@ namespace Mattoid\MoneyHistory\Listeners;
 
 use Mattoid\MoneyHistory\Event\MoneyHistoryEvent;
 
-class MoneyHistoryListeners extends HistoryListeners
+class MoneyHistoryListener extends BaseHistoryListener
 {
     protected $source = "";
     protected $sourceKey = "";
