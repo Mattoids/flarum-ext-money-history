@@ -1,6 +1,6 @@
 <?php
 
-namespace Mattoid\MoneyHistory\model;
+namespace Mattoid\MoneyHistory\Model;
 
 use Flarum\Database\AbstractModel;
 use Flarum\Formatter\Formatter;

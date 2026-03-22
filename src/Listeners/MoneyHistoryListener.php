@@ -10,11 +10,12 @@ class MoneyHistoryListener extends BaseHistoryListener
     protected $sourceKey = "";
     protected $sourceDesc = "";
 
-    public function handle(MoneyHistoryEvent $event) {
+    public function handle(MoneyHistoryEvent $event)
+    {
         $this->source = $event->source;
         $this->sourceKey = $event->sourceKey;
         $this->sourceDesc = $event->sourceDesc;
 
-        $this->exec($event->user, $event->money);
+        $this->storeHistoryEntry($event->user, $event->money);
     }
 }

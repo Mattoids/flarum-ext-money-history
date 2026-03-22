@@ -4,9 +4,8 @@ namespace Mattoid\MoneyHistory\Api\Controller;
 
 use Flarum\Locale\Translator;
 use Flarum\Api\Controller\AbstractListController;
-use Flarum\User\UserRepository;
 use Mattoid\MoneyHistory\Api\Serializer\MoneyHistorySerializer;
-use Mattoid\MoneyHistory\model\UserMoneyHistory;
+use Mattoid\MoneyHistory\Model\UserMoneyHistory;
 use Psr\Http\Message\ServerRequestInterface;
 use Illuminate\Support\Arr;
 use Tobscure\JsonApi\Document;
@@ -38,7 +37,7 @@ class ListUserMoneyHistoryController extends AbstractListController
         $offset = $this->extractOffset($request);
 
         $userId = Arr::get($request->getQueryParams(), 'id');
-        if (!$userId) {
+        if (! $userId) {
             $actor->assertRegistered();
             $userId = $actor->id;
         } else {
@@ -47,16 +46,16 @@ class ListUserMoneyHistoryController extends AbstractListController
             }
         }
         $moneyHistoryQuery = UserMoneyHistory::query()->where(["user_id" => $userId]);
-        $MoneyHistoryResult = $moneyHistoryQuery
+        $historyRecords = $moneyHistoryQuery
             ->skip($offset)
             ->take($limit + 1)
             ->orderBy('id', 'desc')
             ->get();
 
-        $hasMoreResults = $limit > 0 && $MoneyHistoryResult->count() > $limit;
+        $hasMoreResults = $limit > 0 && $historyRecords->count() > $limit;
 
         if ($hasMoreResults) {
-            $MoneyHistoryResult->pop();
+            $historyRecords->pop();
         }
 
         $document->addPaginationLinks(
@@ -67,12 +66,12 @@ class ListUserMoneyHistoryController extends AbstractListController
             $hasMoreResults ? null : 0
         );
 
-        foreach ($MoneyHistoryResult as $key => $value) {
-            if ($value->source_key) {
-                $value->source_desc = $this->translator->trans($value->source_key);
+        foreach ($historyRecords as $historyRecord) {
+            if ($historyRecord->source_key) {
+                $historyRecord->source_desc = $this->translator->trans($historyRecord->source_key);
             }
         }
 
-        return $MoneyHistoryResult;
+        return $historyRecords;
     }
 }

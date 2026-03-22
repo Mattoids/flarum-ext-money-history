@@ -27,7 +27,7 @@ class MoneyHistorySerializer extends AbstractSerializer
     {
         $settings = resolve(SettingsRepositoryInterface::class);
         $storeTimezone = $settings->get('money-history.storeTimezone', 'Asia/Shanghai');
-        $this->storeTimezone = !!$storeTimezone ? $storeTimezone : 'Asia/Shanghai';
+        $this->storeTimezone = ! ! $storeTimezone ? $storeTimezone : 'Asia/Shanghai';
 
         $attributes = [
             'id' => $data->id,

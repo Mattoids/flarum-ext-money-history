@@ -1,6 +1,5 @@
 import Component from "flarum/Component";
 import app from "flarum/app";
-import LoadingIndicator from "flarum/components/LoadingIndicator";
 import Button from "flarum/components/Button";
 
 import MoneyHistoryListItem from "./MoneyHistoryListItem";
@@ -10,34 +9,28 @@ export default class MoneyHistoryList extends Component {
     super.oninit(vnode);
     this.loading = true;
     this.moreResults = false;
-    this.userMoneyHistory = [];
+    this.historyEntries = [];
     this.user = this.attrs.params.user;
     this.loadResults();
   }
 
   view() {
-    let loading;
-
-    if (this.loading) {
-      loading = LoadingIndicator.component({ size: "large" });
-    }
-
     return (
       <div>
         <div style="padding-bottom:10px; font-size: 24px;font-weight: bold;">
           {app.translator.trans("mattoid-money-history.forum.title")}
         </div>
         <ul style="margin: 0;padding: 0;list-style-type: none;position: relative;">
-          {this.userMoneyHistory.map((userMoneyHistory) => {
+          {this.historyEntries.map((historyEntry) => {
             return (
-              <li style="padding-top:5px" key={userMoneyHistory.id} data-id={userMoneyHistory.id}>
-                {MoneyHistoryListItem.component({ userMoneyHistory })}
+              <li style="padding-top:5px" key={historyEntry.id} data-id={historyEntry.id}>
+                {MoneyHistoryListItem.component({ historyEntry })}
               </li>
             );
           })}
         </ul>
 
-        {!this.loading && this.userMoneyHistory.length===0 && (
+        {!this.loading && this.historyEntries.length===0 && (
           <div>
             <div style="font-size:1.4em;color: var(--muted-more-color);text-align: center;height: 300px;line-height: 100px;">{app.translator.trans("mattoid-money-history.forum.list-empty")}</div>
           </div>
@@ -67,16 +60,16 @@ export default class MoneyHistoryList extends Component {
 
   loadMore() {
     this.loading = true;
-    this.loadResults(this.userMoneyHistory.length);
+    this.loadResults(this.historyEntries.length);
   }
 
-  parseResults(results) {
-    this.moreResults = !!results.payload.links && !!results.payload.links.next;
-    [].push.apply(this.userMoneyHistory, results);
+  parseResults(historyEntries) {
+    this.moreResults = !!historyEntries.payload.links && !!historyEntries.payload.links.next;
+    [].push.apply(this.historyEntries, historyEntries);
     this.loading = false;
     m.redraw();
 
-    return results;
+    return historyEntries;
   }
 
   hasMoreResults() {
@@ -85,9 +78,9 @@ export default class MoneyHistoryList extends Component {
 
   loadResults(offset = 0) {
     this.loading = true;
-    let url = '/users/' + this.user.id() + '/money/history';
+    const historyUrl = '/users/' + this.user.id() + '/money/history';
     return app.store
-      .find(url, {
+      .find(historyUrl, {
         filter: {
           user: this.user.id(),
         },
