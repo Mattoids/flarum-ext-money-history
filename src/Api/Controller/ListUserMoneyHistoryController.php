@@ -22,14 +22,12 @@ class ListUserMoneyHistoryController extends AbstractListController
         'createUser'
     ];
 
-    protected $repository;
     protected $translator;
 
-    public function __construct(UserRepository $repository, UrlGenerator $url, Translator $translator)
+    public function __construct(UrlGenerator $url, Translator $translator)
     {
         $this->url = $url;
         $this->translator = $translator;
-        $this->repository = $repository;
     }
 
     protected function data(ServerRequestInterface $request, Document $document)
@@ -48,7 +46,7 @@ class ListUserMoneyHistoryController extends AbstractListController
                 $actor->assertCan('money-history.queryOthersMoneyHistory');
             }
         }
-        $moneyHistoryQuery = UserMoneyHistory::query()->where(["user_id"=>$userId]);
+        $moneyHistoryQuery = UserMoneyHistory::query()->where(["user_id" => $userId]);
         $MoneyHistoryResult = $moneyHistoryQuery
             ->skip($offset)
             ->take($limit + 1)
@@ -57,7 +55,7 @@ class ListUserMoneyHistoryController extends AbstractListController
 
         $hasMoreResults = $limit > 0 && $MoneyHistoryResult->count() > $limit;
 
-        if($hasMoreResults){
+        if ($hasMoreResults) {
             $MoneyHistoryResult->pop();
         }
 

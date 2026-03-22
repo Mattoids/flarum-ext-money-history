@@ -2,6 +2,8 @@
 
 namespace Mattoid\MoneyHistory\Event;
 
+use Flarum\User\User;
+
 class MoneyAllHistoryEvent
 {
 
@@ -10,14 +12,18 @@ class MoneyAllHistoryEvent
     public $source;
     public $sourceKey;
     public $sourceDesc;
+    public $actor;
+    public $oldBalance;
 
-    public function __construct($list = array(), $money = 0, $source = "", $sourceDesc = "", $sourceKey = "")
+    public function __construct(array $list, float $money, string $source, string $sourceDesc, string $sourceKey, ?User $actor = null, ?float $oldBalance = null)
     {
         $this->list = $list;
         $this->money = $money;
         $this->source = $source;
         $this->sourceKey = $sourceKey;
         $this->sourceDesc = $sourceDesc;
+        $this->actor = $actor;
+        $this->oldBalance = $oldBalance;
     }
 
 }

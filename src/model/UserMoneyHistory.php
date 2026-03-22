@@ -37,7 +37,7 @@ class UserMoneyHistory extends AbstractModel
         static::$formatter = $formatter;
     }
 
-    public function User(){
+    public function user(){
         return $this->hasOne(User::class, 'id', 'user_id');
     }
 

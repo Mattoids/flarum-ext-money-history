@@ -43,7 +43,7 @@ class MoneyHistorySerializer extends AbstractSerializer
         return $attributes;
     }
 
-    protected function User($moneyHistory){
+    protected function user($moneyHistory){
         return $this->hasOne($moneyHistory, BasicUserSerializer::class);
     }
 
