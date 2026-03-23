@@ -14,25 +14,26 @@ abstract class BaseHistoryListener
     protected $sourceDesc;
     private $storeTimezone;
 
-    public function storeHistoryEntry(?User $user, $money, $event = null)
+    public function storeHistoryEntry(?User $user, float $balanceDelta, $event = null): void
     {
+        if ($user === null || $balanceDelta == 0.0) {
+            return;
+        }
+
         $settings = resolve(SettingsRepositoryInterface::class);
         $storeTimezone = $settings->get('money-history.storeTimezone', 'Asia/Shanghai');
         $this->storeTimezone = ! ! $storeTimezone ? $storeTimezone : 'Asia/Shanghai';
 
-        if ($money != 0) {
-            $historyEntry = new UserMoneyHistory();
-            $historyEntry->user_id = $user->id;
-            $historyEntry->type = $money > 0 ? "C" : "D";
-            $historyEntry->money = $money > 0 ? $money : -$money;
-            $historyEntry->source = $this->source;
-            $historyEntry->source_key = $this->sourceKey;
-            $historyEntry->source_desc = $this->sourceDesc;
-            $historyEntry->balance_before = isset($event->oldBalance) ? $event->oldBalance : $user->money - $money;
-            $historyEntry->balance_after = isset($event->oldBalance) ? $event->oldBalance + $money : $user->money;
-            $historyEntry->actor_id = $event?->actor?->id ?? $user->id;
-            $historyEntry->created_at = Carbon::now()->tz($this->storeTimezone);
-            $historyEntry->save();
-        }
+        $historyEntry = new UserMoneyHistory();
+        $historyEntry->user_id = $user->id;
+        $historyEntry->balance_delta = $balanceDelta;
+        $historyEntry->source = $this->source;
+        $historyEntry->source_key = $this->sourceKey;
+        $historyEntry->source_desc = $this->sourceDesc;
+        $historyEntry->balance_before = $event?->balanceBefore ?? ($user->money - $balanceDelta);
+        $historyEntry->balance_after = $event?->balanceAfter ?? $user->money;
+        $historyEntry->actor_id = $event?->actor?->id ?? $user->id;
+        $historyEntry->created_at = Carbon::now()->tz($this->storeTimezone);
+        $historyEntry->save();
     }
 }

@@ -8,22 +8,32 @@ class MoneyHistoryEvent
 {
 
     public $user;
-    public $money;
+    public $balanceDelta;
     public $source;
     public $sourceKey;
     public $sourceDesc;
     public $actor;
-    public $oldBalance;
+    public $balanceBefore;
+    public $balanceAfter;
 
-    public function __construct(User $user, float $money, string $source, string $sourceDesc, string $sourceKey, ?User $actor = null, ?float $oldBalance = null)
-    {
+    public function __construct(
+        User $user,
+        float $balanceDelta,
+        string $source,
+        string $sourceDesc,
+        string $sourceKey,
+        ?User $actor = null,
+        ?float $balanceBefore = null,
+        ?float $balanceAfter = null
+    ) {
         $this->user = $user;
-        $this->money = $money;
+        $this->balanceDelta = $balanceDelta;
         $this->source = $source;
         $this->sourceKey = $sourceKey;
         $this->sourceDesc = $sourceDesc;
         $this->actor = $actor;
-        $this->oldBalance = $oldBalance;
+        $this->balanceBefore = $balanceBefore;
+        $this->balanceAfter = $balanceAfter;
     }
 
 }

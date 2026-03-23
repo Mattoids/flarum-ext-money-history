@@ -11,11 +11,9 @@
 
 namespace Mattoid\MoneyHistory\Api\Serializer;
 
+use Carbon\Carbon;
 use Flarum\Api\Serializer\AbstractSerializer;
 use Flarum\Api\Serializer\BasicUserSerializer;
-use Flarum\Api\Serializer\PostSerializer;
-use Carbon\Carbon;
-use Flarum\Post\Post;
 use Flarum\Settings\SettingsRepositoryInterface;
 
 class MoneyHistorySerializer extends AbstractSerializer
@@ -31,8 +29,7 @@ class MoneyHistorySerializer extends AbstractSerializer
 
         $attributes = [
             'id' => $data->id,
-            'type' => $data->type,
-            'money' => $data->money,
+            'balance_delta' => $data->balance_delta,
             'user_id' => $data->user_id,
             'source_desc' => $data->source_desc,
             'balance_after' => $data->balance_after,

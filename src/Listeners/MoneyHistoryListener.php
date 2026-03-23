@@ -16,6 +16,6 @@ class MoneyHistoryListener extends BaseHistoryListener
         $this->sourceKey = $event->sourceKey;
         $this->sourceDesc = $event->sourceDesc;
 
-        $this->storeHistoryEntry($event->user, $event->money);
+        $this->storeHistoryEntry($event->user, $event->balanceDelta, $event);
     }
 }

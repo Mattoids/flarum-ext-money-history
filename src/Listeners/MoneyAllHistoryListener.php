@@ -23,16 +23,15 @@ class MoneyAllHistoryListener extends BaseHistoryListener
         $this->source = $event->source;
         $this->sourceDesc = $event->sourceDesc;
 
-        if ($event->money != 0) {
+        if ($event->balanceDelta != 0) {
             $historyList = array();
             foreach ($event->list as $user) {
                 $actorId = $event->actor ? $event->actor->id : $user->id;
 
                 $historyList[] = array(
                     "user_id" => $user->id,
-                    "type" => $event->money > 0 ? "C" : "D",
-                    "money" => $event->money,
-                    "balance_before" => $user->money - $event->money,
+                    "balance_delta" => $event->balanceDelta,
+                    "balance_before" => $user->money - $event->balanceDelta,
                     "balance_after" => $user->money,
                     "source" => $event->source,
                     "source_key" => $event->sourceKey,
