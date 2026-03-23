@@ -3,21 +3,21 @@ import MoneyHistoryList from "./MoneyHistoryList";
 
 export default class MoneyHistoryPage extends UserPage {
 
-    oninit(vnode) {
-        super.oninit(vnode);
+  oninit(vnode) {
+    super.oninit(vnode);
 
-        this.loadUser(m.route.param('username'));
-    }
+    this.loadUser(m.route.param('username'));
+  }
 
-    content() {
-      return (
-        <div className="Post-body">
-          {MoneyHistoryList.component({
-              params: {
-                user: this.user,
-              },
-            })}
-          </div>
-      );
-    }
+  content() {
+    return (
+      <div className="Post-body">
+        {MoneyHistoryList.component({
+          params: {
+            user: this.user,
+          },
+        })}
+      </div>
+    );
+  }
 }

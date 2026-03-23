@@ -30,7 +30,7 @@ export default class MoneyHistoryList extends Component {
           })}
         </ul>
 
-        {!this.loading && this.historyEntries.length===0 && (
+        {!this.loading && this.historyEntries.length === 0 && (
           <div>
             <div style="font-size:1.4em;color: var(--muted-more-color);text-align: center;height: 300px;line-height: 100px;">{app.translator.trans("mattoid-money-history.forum.list-empty")}</div>
           </div>
@@ -48,7 +48,7 @@ export default class MoneyHistoryList extends Component {
           <div class="DiscussionList">
             <div class="DiscussionList-loadMore">
               <div aria-label="loading…" role="status" data-size="medium"
-                   class="LoadingIndicator-container LoadingIndicator-container--block LoadingIndicator-container--medium">
+                class="LoadingIndicator-container LoadingIndicator-container--block LoadingIndicator-container--medium">
                 <div aria-hidden="true" class="LoadingIndicator"></div>
               </div>
             </div>
@@ -88,7 +88,7 @@ export default class MoneyHistoryList extends Component {
           offset,
         },
       })
-      .catch(() => {})
+      .catch(() => { })
       .then(this.parseResults.bind(this));
   }
 }

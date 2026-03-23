@@ -5,7 +5,7 @@ import username from "flarum/helpers/username";
 
 export default class MoneyHistoryListItem extends Component {
   view() {
-    const {historyEntry} = this.attrs;
+    const { historyEntry } = this.attrs;
     const createdAt = historyEntry.createdAt();
     const money = historyEntry.money();
     const sourceDesc = historyEntry.sourceDesc();
@@ -13,8 +13,8 @@ export default class MoneyHistoryListItem extends Component {
     const actor = historyEntry.actor();
     const balanceBefore = historyEntry.balanceBefore();
     const balanceAfter = historyEntry.balanceAfter();
-    const moneyType = app.translator.trans(historyEntry.type()==='D'?"mattoid-money-history.forum.record.money-out":"mattoid-money-history.forum.record.money-in");
-    const moneyTypeStyle = historyEntry.type()==='D'?"color:red":"color:green";
+    const moneyType = app.translator.trans(historyEntry.type() === 'D' ? "mattoid-money-history.forum.record.money-out" : "mattoid-money-history.forum.record.money-in");
+    const moneyTypeStyle = historyEntry.type() === 'D' ? "color:red" : "color:green";
 
     return (
       <div className="moneyHistoryContainer">
