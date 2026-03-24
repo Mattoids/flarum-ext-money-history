@@ -3,12 +3,38 @@ import Link from "flarum/components/Link";
 import avatar from "flarum/helpers/avatar";
 import username from "flarum/helpers/username";
 
+function buildSourceDescription(historyEntry) {
+  const sourceKey = historyEntry.sourceKey?.();
+  const sourceParams = historyEntry.sourceParams?.() || {};
+
+  if (!sourceKey) {
+    return historyEntry.source?.() || "";
+  }
+
+  const translationParams = {};
+
+  Object.entries(sourceParams).forEach(([key, value]) => {
+    if (value !== null && typeof value === "object") {
+      return;
+    }
+
+    if (key.endsWith("Key") && typeof value === "string") {
+      translationParams[`{${key.slice(0, -3)}}`] = app.translator.trans(value);
+      return;
+    }
+
+    translationParams[`{${key}}`] = value;
+  });
+
+  return app.translator.trans(sourceKey, translationParams);
+}
+
 export default class MoneyHistoryListItem extends Component {
   view() {
     const { historyEntry } = this.attrs;
     const createdAt = historyEntry.createdAt();
     const balanceDelta = historyEntry.balanceDelta();
-    const sourceDesc = historyEntry.sourceDesc();
+    const sourceDescription = buildSourceDescription(historyEntry);
     const historyId = historyEntry.id();
     const actor = historyEntry.actor();
     const balanceBefore = historyEntry.balanceBefore();
@@ -45,7 +71,7 @@ export default class MoneyHistoryListItem extends Component {
           {balanceBefore}&nbsp;-&gt;&nbsp;{balanceAfter}&nbsp;|&nbsp;
           <span>
             <b>{app.translator.trans("mattoid-money-history.forum.record.money-list-transfer-notes")}: </b>
-            {sourceDesc}
+            {sourceDescription}
           </span>
         </div>
       </div>

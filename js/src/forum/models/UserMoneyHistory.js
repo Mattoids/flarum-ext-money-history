@@ -6,7 +6,6 @@ Object.assign(UserMoneyHistory.prototype, {
   source: Model.attribute('source'),
   sourceKey: Model.attribute('source_key'),
   sourceParams: Model.attribute('source_params'),
-  sourceDesc: Model.attribute('source_desc'),
   createdAt: Model.attribute('created_at'),
   balanceBefore: Model.attribute('balance_before'),
   balanceAfter: Model.attribute('balance_after'),

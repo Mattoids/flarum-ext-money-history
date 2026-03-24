@@ -2,7 +2,6 @@
 
 namespace Mattoid\MoneyHistory\Api\Controller;
 
-use Flarum\Locale\Translator;
 use Flarum\Api\Controller\AbstractListController;
 use Mattoid\MoneyHistory\Api\Serializer\MoneyHistorySerializer;
 use Mattoid\MoneyHistory\Model\UserMoneyHistory;
@@ -17,16 +16,12 @@ class ListUserMoneyHistoryController extends AbstractListController
     public $serializer = MoneyHistorySerializer::class;
 
     public $include = [
-        'user',
         'actor'
     ];
 
-    protected $translator;
-
-    public function __construct(UrlGenerator $url, Translator $translator)
+    public function __construct(UrlGenerator $url)
     {
         $this->url = $url;
-        $this->translator = $translator;
     }
 
     protected function data(ServerRequestInterface $request, Document $document)
@@ -35,8 +30,11 @@ class ListUserMoneyHistoryController extends AbstractListController
         $actor = $request->getAttribute('actor');
         $limit = $this->extractLimit($request);
         $offset = $this->extractOffset($request);
+        $filters = $this->extractFilter($request);
 
-        $userId = Arr::get($request->getQueryParams(), 'id');
+        $userId = Arr::get($request->getAttribute('routeParameters', []), 'id')
+            ?: Arr::get($filters, 'user')
+            ?: Arr::get($params, 'id');
         if (! $userId) {
             $actor->assertRegistered();
             $userId = $actor->id;
@@ -45,11 +43,11 @@ class ListUserMoneyHistoryController extends AbstractListController
                 $actor->assertCan('money-history.queryOthersMoneyHistory');
             }
         }
-        $moneyHistoryQuery = UserMoneyHistory::query()->where(["user_id" => $userId]);
+        $moneyHistoryQuery = UserMoneyHistory::query()->where(['user_id' => $userId]);
         $historyRecords = $moneyHistoryQuery
+            ->orderBy('id', 'desc')
             ->skip($offset)
             ->take($limit + 1)
-            ->orderBy('id', 'desc')
             ->get();
 
         $hasMoreResults = $limit > 0 && $historyRecords->count() > $limit;
@@ -66,42 +64,6 @@ class ListUserMoneyHistoryController extends AbstractListController
             $hasMoreResults ? null : 0
         );
 
-        foreach ($historyRecords as $historyRecord) {
-            $historyRecord->source_desc = $this->buildSourceDesc($historyRecord);
-        }
-
         return $historyRecords;
-    }
-
-    private function buildSourceDesc(UserMoneyHistory $historyRecord): string
-    {
-        if ($historyRecord->source_key) {
-            return $this->translator->trans(
-                $historyRecord->source_key,
-                $this->buildTranslationParameters($historyRecord->source_params ?? [])
-            );
-        }
-
-        return $historyRecord->source ?? '';
-    }
-
-    private function buildTranslationParameters(array $sourceParams): array
-    {
-        $parameters = [];
-
-        foreach ($sourceParams as $key => $value) {
-            if (! is_scalar($value) && $value !== null) {
-                continue;
-            }
-
-            if (substr($key, -3) === 'Key' && is_string($value)) {
-                $parameters['{'.substr($key, 0, -3).'}'] = $this->translator->trans($value);
-                continue;
-            }
-
-            $parameters['{'.$key.'}'] = $value;
-        }
-
-        return $parameters;
     }
 }

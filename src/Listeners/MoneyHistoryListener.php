@@ -3,18 +3,25 @@
 namespace Mattoid\MoneyHistory\Listeners;
 
 use Mattoid\MoneyHistory\Event\MoneyHistoryEvent;
+use Mattoid\MoneyHistory\Service\HistoryWriter;
 
-class MoneyHistoryListener extends BaseHistoryListener
+class MoneyHistoryListener
 {
-    protected $source = "";
-    protected $sourceKey = "";
-
-    public function handle(MoneyHistoryEvent $event)
+    public function __construct(private HistoryWriter $historyWriter)
     {
-        $this->source = $event->source;
-        $this->sourceKey = $event->sourceKey;
-        $this->sourceParams = $event->sourceParams;
+    }
 
-        $this->storeHistoryEntry($event->user, $event->balanceDelta, $event);
+    public function handle(MoneyHistoryEvent $event): void
+    {
+        $this->historyWriter->write(
+            $event->user,
+            $event->balanceDelta,
+            $event->source,
+            $event->sourceKey,
+            $event->sourceParams,
+            $event->actor,
+            $event->balanceBefore,
+            $event->balanceAfter
+        );
     }
 }
