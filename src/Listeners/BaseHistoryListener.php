@@ -11,7 +11,7 @@ abstract class BaseHistoryListener
 {
     protected $source;
     protected $sourceKey;
-    protected $sourceDesc;
+    protected $sourceParams = [];
     private $storeTimezone;
 
     public function storeHistoryEntry(?User $user, float $balanceDelta, $event = null): void
@@ -29,7 +29,7 @@ abstract class BaseHistoryListener
         $historyEntry->balance_delta = $balanceDelta;
         $historyEntry->source = $this->source;
         $historyEntry->source_key = $this->sourceKey;
-        $historyEntry->source_desc = $this->sourceDesc;
+        $historyEntry->source_params = $this->sourceParams;
         $historyEntry->balance_before = $event?->balanceBefore ?? ($user->money - $balanceDelta);
         $historyEntry->balance_after = $event?->balanceAfter ?? $user->money;
         $historyEntry->actor_id = $event?->actor?->id ?? $user->id;

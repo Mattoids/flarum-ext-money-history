@@ -11,7 +11,6 @@ class MoneyAllHistoryListener extends BaseHistoryListener
 {
     protected $source;
     protected $sourceKey;
-    protected $sourceDesc;
     private $storeTimezone;
 
     public function handle(MoneyAllHistoryEvent $event)
@@ -21,7 +20,8 @@ class MoneyAllHistoryListener extends BaseHistoryListener
         $this->storeTimezone = ! ! $storeTimezone ? $storeTimezone : 'Asia/Shanghai';
 
         $this->source = $event->source;
-        $this->sourceDesc = $event->sourceDesc;
+        $this->sourceKey = $event->sourceKey;
+        $this->sourceParams = $event->sourceParams;
 
         if ($event->balanceDelta != 0) {
             $historyList = array();
@@ -35,7 +35,7 @@ class MoneyAllHistoryListener extends BaseHistoryListener
                     "balance_after" => $user->money,
                     "source" => $event->source,
                     "source_key" => $event->sourceKey,
-                    "source_desc" => $event->sourceDesc,
+                    "source_params" => $event->sourceParams,
                     "actor_id" => $actorId,
                     "created_at" => Carbon::now()->tz($this->storeTimezone),
                 );

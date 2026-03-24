@@ -9,6 +9,9 @@ use Flarum\User\User;
 class UserMoneyHistory extends AbstractModel
 {
     protected $table = "user_money_history";
+    protected $casts = [
+        'source_params' => 'array',
+    ];
 
     /**
      * The text formatter instance.

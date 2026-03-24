@@ -67,11 +67,41 @@ class ListUserMoneyHistoryController extends AbstractListController
         );
 
         foreach ($historyRecords as $historyRecord) {
-            if ($historyRecord->source_key) {
-                $historyRecord->source_desc = $this->translator->trans($historyRecord->source_key);
-            }
+            $historyRecord->source_desc = $this->buildSourceDesc($historyRecord);
         }
 
         return $historyRecords;
+    }
+
+    private function buildSourceDesc(UserMoneyHistory $historyRecord): string
+    {
+        if ($historyRecord->source_key) {
+            return $this->translator->trans(
+                $historyRecord->source_key,
+                $this->buildTranslationParameters($historyRecord->source_params ?? [])
+            );
+        }
+
+        return $historyRecord->source ?? '';
+    }
+
+    private function buildTranslationParameters(array $sourceParams): array
+    {
+        $parameters = [];
+
+        foreach ($sourceParams as $key => $value) {
+            if (! is_scalar($value) && $value !== null) {
+                continue;
+            }
+
+            if (substr($key, -3) === 'Key' && is_string($value)) {
+                $parameters['{'.substr($key, 0, -3).'}'] = $this->translator->trans($value);
+                continue;
+            }
+
+            $parameters['{'.$key.'}'] = $value;
+        }
+
+        return $parameters;
     }
 }

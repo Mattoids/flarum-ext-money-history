@@ -52,4 +52,16 @@ return function (Builder $schema) {
             $table->dropColumn('type');
         });
     }
+
+    if (! $schema->hasColumn('user_money_history', 'source_params')) {
+        $schema->table('user_money_history', function (Blueprint $table) {
+            $table->text('source_params')->nullable()->comment('资金用途描述参数');
+        });
+    }
+
+    if ($schema->hasColumn('user_money_history', 'source_desc')) {
+        $schema->table('user_money_history', function (Blueprint $table) {
+            $table->dropColumn('source_desc');
+        });
+    }
 };

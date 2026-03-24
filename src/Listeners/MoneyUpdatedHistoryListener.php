@@ -2,14 +2,11 @@
 
 namespace Mattoid\MoneyHistory\Listeners;
 
-use Mattoid\MoneyHistory\Event\MoneyHistoryEvent;
+use AntoineFr\Money\Event\MoneyUpdated;
 
-class MoneyHistoryListener extends BaseHistoryListener
+class MoneyUpdatedHistoryListener extends BaseHistoryListener
 {
-    protected $source = "";
-    protected $sourceKey = "";
-
-    public function handle(MoneyHistoryEvent $event)
+    public function handle(MoneyUpdated $event): void
     {
         $this->source = $event->source;
         $this->sourceKey = $event->sourceKey;

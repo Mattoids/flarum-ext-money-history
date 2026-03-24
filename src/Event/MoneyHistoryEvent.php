@@ -11,7 +11,7 @@ class MoneyHistoryEvent
     public $balanceDelta;
     public $source;
     public $sourceKey;
-    public $sourceDesc;
+    public $sourceParams;
     public $actor;
     public $balanceBefore;
     public $balanceAfter;
@@ -20,8 +20,8 @@ class MoneyHistoryEvent
         User $user,
         float $balanceDelta,
         string $source,
-        string $sourceDesc,
-        string $sourceKey,
+        string $sourceKey = '',
+        array $sourceParams = [],
         ?User $actor = null,
         ?float $balanceBefore = null,
         ?float $balanceAfter = null
@@ -30,7 +30,7 @@ class MoneyHistoryEvent
         $this->balanceDelta = $balanceDelta;
         $this->source = $source;
         $this->sourceKey = $sourceKey;
-        $this->sourceDesc = $sourceDesc;
+        $this->sourceParams = $sourceParams;
         $this->actor = $actor;
         $this->balanceBefore = $balanceBefore;
         $this->balanceAfter = $balanceAfter;
