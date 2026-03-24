@@ -8,8 +8,14 @@
     "license": "LPL-1.02",
     "require": {
         "flarum/core": "^1.2.0",
-        "antoinefr/flarum-ext-money": "^1.3"
+        "antoinefr/flarum-ext-money": "*"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/huoxin233/flarum-ext-money.git"
+        }
+    ],
     "authors": [
         {
             "name": "mattoid",
@@ -76,6 +82,6 @@
     },
     "require-dev": {
         "flarum/testing": "^1.0.0",
-        "antoinefr/flarum-ext-money": "*@dev"
+        "antoinefr/flarum-ext-money": "dev-huoxin/support-money-history"
     }
 }
