@@ -55,7 +55,8 @@
     "prefer-stable": true,
     "autoload-dev": {
         "psr-4": {
-            "Mattoid\\MoneyHistory\\Tests\\": "tests/"
+            "Mattoid\\MoneyHistory\\Tests\\": "tests/",
+            "AntoineFr\\Money\\": "../../flarum-ext-money-master/src/"
         }
     },
     "scripts": {
@@ -74,6 +75,7 @@
         "test:setup": "Sets up a database for use with integration tests. Execute this only once."
     },
     "require-dev": {
-        "flarum/testing": "^1.0.0"
+        "flarum/testing": "^1.0.0",
+        "antoinefr/flarum-ext-money": "*@dev"
     }
 }
