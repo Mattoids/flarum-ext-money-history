@@ -14,23 +14,18 @@ app.initializers.add('flarum-ext-money-history', () => {
   };
 
   extend(UserPage.prototype, 'navItems', function (items) {
-    if (app.session.user.id() !== this.user.id()) {
+    if (!app.session.user || app.session.user.id() !== this.user!.id()) {
       if (!this.user || !this.user.attribute('canQueryOthersMoneyHistory')) {
         return;
       }
     }
 
-    items.add(
-      'userMoneyHistory',
-      LinkButton.component(
-        {
-          href: app.route('userMoneyHistory', {
-            username: this.user.slug(),
-          }),
-          icon: 'fas fa-money-bill',
-        },
-        app.translator.trans('mattoid-money-history.forum.nav')
-      )
-    );
+
+    items.add('userMoneyHistory', LinkButton.component({
+      href: app.route('userMoneyHistory', {
+        username: this.user!.slug(),
+      }),
+      icon: 'fas fa-money-bill',
+    }, app.translator.trans('mattoid-money-history.forum.nav')));
   });
 });
