@@ -53,6 +53,7 @@ class HistoryWriter
         }
 
         $createdAt = $this->currentTimestamp();
+        $encodedSourceParams = $encodedSourceParams = json_encode($sourceParams, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         $historyEntries = [];
 
         foreach ($users as $user) {
@@ -67,7 +68,7 @@ class HistoryWriter
                 'balance_after' => $user->money,
                 'source' => $source,
                 'source_key' => $sourceKey,
-                'source_params' => $sourceParams,
+                'source_params' => $encodedSourceParams,
                 'actor_id' => $actor?->id ?? $user->id,
                 'created_at' => $createdAt,
             ];

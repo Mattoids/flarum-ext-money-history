@@ -7,6 +7,33 @@ use Illuminate\Database\ConnectionInterface;
 
 class MigrationCompatibilityTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        /** @var ConnectionInterface $connection */
+        $connection = $this->app()->getContainer()->make(ConnectionInterface::class);
+        $schema = $connection->getSchemaBuilder();
+
+        if ($schema->hasTable('user_money_history')) {
+            $schema->drop('user_money_history');
+        }
+        $create = require __DIR__.'/../../migrations/2023_11_08_000000_create_user_money_history_table.php';
+        $source = require __DIR__.'/../../migrations/2024_03_05_000000_add_source_key_to_user_money_history.php';
+        $rename = require __DIR__.'/../../migrations/2026_03_22_000000_rename_money_history_columns.php';
+        $normalize = require __DIR__.'/../../migrations/2026_03_22_000001_normalize_money_history_balance_delta.php';
+
+        $create['up']($schema);
+        $source['up']($schema);
+        $rename['up']($schema);
+        $normalize['up']($schema);
+
+        try {
+            parent::tearDown();
+        } catch (\Exception $e) {
+            // Expected: DDL auto-commits the MySQL transaction,
+            // so parent's rollBack() always throws here.
+        }
+    }
+
     /** @test */
     public function it_migrates_legacy_money_history_rows_to_the_current_schema_without_data_loss(): void
     {
