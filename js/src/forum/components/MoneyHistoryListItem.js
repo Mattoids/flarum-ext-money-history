@@ -1,7 +1,7 @@
-import Component from "flarum/Component";
-import Link from "flarum/components/Link";
-import avatar from "flarum/helpers/avatar";
-import username from "flarum/helpers/username";
+import Component from "flarum/common/Component";
+import Link from "flarum/common/components/Link";
+import avatar from "flarum/common/helpers/avatar";
+import username from "flarum/common/helpers/username";
 
 function buildSourceDescription(historyEntry) {
   const sourceKey = historyEntry.sourceKey?.();
