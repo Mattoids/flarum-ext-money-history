@@ -1,8 +1,7 @@
 import UserPage from 'flarum/forum/components/UserPage';
-import MoneyHistoryList from "./MoneyHistoryList";
+import MoneyHistoryList from './MoneyHistoryList';
 
 export default class MoneyHistoryPage extends UserPage {
-
   oninit(vnode) {
     super.oninit(vnode);
 

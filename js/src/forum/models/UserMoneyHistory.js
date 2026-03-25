@@ -1,6 +1,6 @@
 import Model from 'flarum/common/Model';
 
-export default class UserMoneyHistory extends Model { }
+export default class UserMoneyHistory extends Model {}
 Object.assign(UserMoneyHistory.prototype, {
   balanceDelta: Model.attribute('balance_delta'),
   source: Model.attribute('source'),
@@ -10,5 +10,5 @@ Object.assign(UserMoneyHistory.prototype, {
   balanceBefore: Model.attribute('balance_before'),
   balanceAfter: Model.attribute('balance_after'),
   user: Model.hasOne('user'),
-  actor: Model.hasOne('actor')
-})
+  actor: Model.hasOne('actor'),
+});
