@@ -48,7 +48,7 @@ class BalanceHistoryConsistencyTest extends TestCase
             25.0,
             'MANUAL_CREDIT',
             'test.manual-credit',
-            ['step' => 'credit'],
+            [],
             $actor,
             $user
         ));
@@ -60,7 +60,7 @@ class BalanceHistoryConsistencyTest extends TestCase
             -10.0,
             'MANUAL_DEBIT',
             'test.manual-debit',
-            ['step' => 'debit'],
+            [],
             $actor,
             $user
         ));
@@ -86,14 +86,14 @@ class BalanceHistoryConsistencyTest extends TestCase
         $this->assertEquals(25.0, (float) $records[0]->balance_delta);
         $this->assertEquals(0.0, (float) $records[0]->balance_before);
         $this->assertEquals(25.0, (float) $records[0]->balance_after);
-        $this->assertSame(['step' => 'credit'], $records[0]->source_params);
+        $this->assertSame([], $records[0]->source_params);
         $this->assertSame($actor->id, $records[0]->actor_id);
 
         $this->assertSame('MANUAL_DEBIT', $records[1]->source);
         $this->assertEquals(-10.0, (float) $records[1]->balance_delta);
         $this->assertEquals(25.0, (float) $records[1]->balance_before);
         $this->assertEquals(15.0, (float) $records[1]->balance_after);
-        $this->assertSame(['step' => 'debit'], $records[1]->source_params);
+        $this->assertSame([], $records[1]->source_params);
         $this->assertSame($actor->id, $records[1]->actor_id);
 
         foreach ($records as $record) {

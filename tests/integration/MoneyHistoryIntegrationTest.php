@@ -43,7 +43,7 @@ class MoneyHistoryIntegrationTest extends TestCase
             5.5,
             'POST_REWARD',
             'money.post-reward',
-            ['postId' => 99],
+            [],
             $actor,
             $user,
             10.0,
@@ -56,10 +56,59 @@ class MoneyHistoryIntegrationTest extends TestCase
         $this->assertEquals(5.5, (float) $historyEntry->balance_delta);
         $this->assertSame('POST_REWARD', $historyEntry->source);
         $this->assertSame('money.post-reward', $historyEntry->source_key);
-        $this->assertSame(['postId' => 99], json_decode($historyEntry->source_params, true));
+        $this->assertSame([], json_decode($historyEntry->source_params, true));
         $this->assertEquals(10.0, (float) $historyEntry->balance_before);
         $this->assertEquals(15.5, (float) $historyEntry->balance_after);
         $this->assertSame($actor->id, $historyEntry->actor_id);
+    }
+
+    /** @test */
+    public function it_stores_source_params_as_json_and_returns_them_for_variable_transaction_reasons(): void
+    {
+        $dispatcher = $this->app()->getContainer()->make(Dispatcher::class);
+        $user = User::query()->findOrFail(2);
+        $actor = User::query()->findOrFail(3);
+        $sourceParams = [
+            'itemName' => 'VIP Badge',
+            'itemTypeKey' => 'money-store.forum.item-types.decoration',
+            'purchaseTypeKey' => 'money-store.forum.purchase-types.auto-renew',
+            'purchaseCount' => 2,
+        ];
+
+        $dispatcher->dispatch(new MoneyUpdated(
+            $user,
+            -12.5,
+            'AUTO_RENEW',
+            'money-store.forum.reason.auto-renew',
+            $sourceParams,
+            $actor,
+            $user,
+            50.0,
+            37.5
+        ));
+
+        $historyEntry = $this->connection()->table('user_money_history')->where('user_id', $user->id)->first();
+
+        $this->assertNotNull($historyEntry);
+        $this->assertSame('money-store.forum.reason.auto-renew', $historyEntry->source_key);
+        $this->assertIsString($historyEntry->source_params);
+        $this->assertJson($historyEntry->source_params);
+        $this->assertJsonStringEqualsJsonString(
+            json_encode($sourceParams, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+            $historyEntry->source_params
+        );
+        $this->assertSame($sourceParams, json_decode($historyEntry->source_params, true));
+
+        $response = $this->send(
+            $this->request('GET', '/api/users/2/money/history', ['authenticatedAs' => 2])
+        );
+
+        $payload = json_decode((string) $response->getBody(), true);
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertCount(1, $payload['data']);
+        $this->assertSame('money-store.forum.reason.auto-renew', $payload['data'][0]['attributes']['source_key']);
+        $this->assertSame($sourceParams, $payload['data'][0]['attributes']['source_params']);
     }
 
     /** @test */
@@ -76,7 +125,7 @@ class MoneyHistoryIntegrationTest extends TestCase
             3,
             'LEGACY_SINGLE',
             'money.legacy-single',
-            ['kind' => 'single'],
+            [],
             $actor,
             17,
             20
@@ -87,7 +136,7 @@ class MoneyHistoryIntegrationTest extends TestCase
             -2,
             'LEGACY_BATCH',
             'money.legacy-batch',
-            ['kind' => 'batch'],
+            [],
             $actor
         ));
 
@@ -104,8 +153,9 @@ class MoneyHistoryIntegrationTest extends TestCase
 
         $this->assertCount(2, $records);
         $this->assertSame('LEGACY_BATCH', $records[0]->source);
-        $this->assertSame(['kind' => 'batch'], $records[0]->source_params);
+        $this->assertSame([], $records[0]->source_params);
         $this->assertSame('LEGACY_SINGLE', $records[1]->source);
+        $this->assertSame([], $records[1]->source_params);
 
         $response = $this->send(
             $this->request('GET', '/api/users/2/money/history', ['authenticatedAs' => 2])
@@ -116,8 +166,9 @@ class MoneyHistoryIntegrationTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertCount(2, $payload['data']);
         $this->assertSame('LEGACY_BATCH', $payload['data'][0]['attributes']['source']);
-        $this->assertSame(['kind' => 'batch'], $payload['data'][0]['attributes']['source_params']);
+        $this->assertSame([], $payload['data'][0]['attributes']['source_params']);
         $this->assertSame('LEGACY_SINGLE', $payload['data'][1]['attributes']['source']);
+        $this->assertSame([], $payload['data'][1]['attributes']['source_params']);
     }
 
     /** @test */
