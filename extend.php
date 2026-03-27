@@ -11,15 +11,14 @@
 
 use Flarum\Extend;
 use Flarum\Api\Serializer\BasicUserSerializer;
-use AntoineFr\Money\Event\MoneyUpdated;
 
 use Mattoid\MoneyHistory\Api\Controller\ListUserMoneyHistoryController;
 use Mattoid\MoneyHistory\Attributes\UserAttributes;
 use Mattoid\MoneyHistory\Event\MoneyAllHistoryEvent;
 use Mattoid\MoneyHistory\Listeners\MoneyAllHistoryListener;
 use Mattoid\MoneyHistory\Listeners\MoneyHistoryListener;
-use Mattoid\MoneyHistory\Listeners\MoneyUpdatedHistoryListener;
 use Mattoid\MoneyHistory\Event\MoneyHistoryEvent;
+use Mattoid\MoneyHistory\Provider\MoneyHistoryServiceProvider;
 
 return [
     (new Extend\Frontend('forum'))
@@ -37,8 +36,10 @@ return [
     (new Extend\Routes('api'))
         ->get('/users/{id}/money/history', 'user.money.history', ListUserMoneyHistoryController::class),
 
+    (new Extend\ServiceProvider())
+        ->register(MoneyHistoryServiceProvider::class),
+
     (new Extend\Event())
-        ->listen(MoneyUpdated::class, MoneyUpdatedHistoryListener::class)
         ->listen(MoneyHistoryEvent::class, MoneyHistoryListener::class)
         ->listen(MoneyAllHistoryEvent::class, MoneyAllHistoryListener::class),
 ];

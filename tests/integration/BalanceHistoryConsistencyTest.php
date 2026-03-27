@@ -6,7 +6,6 @@ use AntoineFr\Money\Service\BalanceManager;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
 use Flarum\User\User;
-use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Database\Schema\Blueprint;
 
@@ -38,10 +37,7 @@ class BalanceHistoryConsistencyTest extends TestCase
         $user = User::query()->findOrFail(2);
         $actor = User::query()->findOrFail(3);
 
-        $balanceManager = new BalanceManager(
-            $this->app()->getContainer()->make(ConnectionInterface::class),
-            $this->app()->getContainer()->make(Dispatcher::class)
-        );
+        $balanceManager = $this->app()->getContainer()->make(BalanceManager::class);
 
         $this->assertTrue($balanceManager->adjustBalance(
             $user,

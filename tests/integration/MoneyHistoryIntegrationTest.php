@@ -2,7 +2,7 @@
 
 namespace Mattoid\MoneyHistory\Tests\integration;
 
-use AntoineFr\Money\Event\MoneyUpdated;
+use AntoineFr\Money\Service\BalanceManager;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
 use Flarum\User\User;
@@ -19,6 +19,7 @@ class MoneyHistoryIntegrationTest extends TestCase
     {
         parent::setUp();
 
+        $this->extension('antoinefr-money');
         $this->extension('mattoid-money-history');
 
         $this->prepareDatabase([
@@ -32,22 +33,20 @@ class MoneyHistoryIntegrationTest extends TestCase
     }
 
     /** @test */
-    public function it_records_money_updated_events_with_expected_history_fields(): void
+    public function it_records_balance_manager_updates_with_expected_history_fields(): void
     {
-        $dispatcher = $this->app()->getContainer()->make(Dispatcher::class);
         $user = User::query()->findOrFail(2);
         $actor = User::query()->findOrFail(3);
+        $balanceManager = $this->app()->getContainer()->make(BalanceManager::class);
 
-        $dispatcher->dispatch(new MoneyUpdated(
+        $this->assertTrue($balanceManager->adjustBalance(
             $user,
             5.5,
             'POST_REWARD',
             'money.post-reward',
             [],
             $actor,
-            $user,
-            10.0,
-            15.5
+            $user
         ));
 
         $historyEntry = $this->connection()->table('user_money_history')->where('user_id', $user->id)->first();
@@ -57,17 +56,19 @@ class MoneyHistoryIntegrationTest extends TestCase
         $this->assertSame('POST_REWARD', $historyEntry->source);
         $this->assertSame('money.post-reward', $historyEntry->source_key);
         $this->assertSame([], json_decode($historyEntry->source_params, true));
-        $this->assertEquals(10.0, (float) $historyEntry->balance_before);
-        $this->assertEquals(15.5, (float) $historyEntry->balance_after);
+        $this->assertEquals(0.0, (float) $historyEntry->balance_before);
+        $this->assertEquals(5.5, (float) $historyEntry->balance_after);
         $this->assertSame($actor->id, $historyEntry->actor_id);
     }
 
     /** @test */
     public function it_stores_source_params_as_json_and_returns_them_for_variable_transaction_reasons(): void
     {
-        $dispatcher = $this->app()->getContainer()->make(Dispatcher::class);
         $user = User::query()->findOrFail(2);
         $actor = User::query()->findOrFail(3);
+        $balanceManager = $this->app()->getContainer()->make(BalanceManager::class);
+        $user->money = 50.0;
+        $user->save();
         $sourceParams = [
             'itemName' => 'VIP Badge',
             'itemTypeKey' => 'money-store.forum.item-types.decoration',
@@ -75,16 +76,14 @@ class MoneyHistoryIntegrationTest extends TestCase
             'purchaseCount' => 2,
         ];
 
-        $dispatcher->dispatch(new MoneyUpdated(
+        $this->assertTrue($balanceManager->adjustBalance(
             $user,
             -12.5,
             'AUTO_RENEW',
             'money-store.forum.reason.auto-renew',
             $sourceParams,
             $actor,
-            $user,
-            50.0,
-            37.5
+            $user
         ));
 
         $historyEntry = $this->connection()->table('user_money_history')->where('user_id', $user->id)->first();
@@ -174,17 +173,17 @@ class MoneyHistoryIntegrationTest extends TestCase
     /** @test */
     public function it_does_not_record_zero_delta_or_missing_user_events(): void
     {
-        $dispatcher = $this->app()->getContainer()->make(Dispatcher::class);
+        $balanceManager = $this->app()->getContainer()->make(BalanceManager::class);
         $user = User::query()->findOrFail(2);
 
-        $dispatcher->dispatch(new MoneyUpdated(
+        $this->assertFalse($balanceManager->adjustBalance(
             $user,
             0.0,
             'ZERO_DELTA',
             'money.zero-delta'
         ));
 
-        $dispatcher->dispatch(new MoneyUpdated(
+        $this->assertFalse($balanceManager->adjustBalance(
             null,
             5.0,
             'MISSING_USER',
