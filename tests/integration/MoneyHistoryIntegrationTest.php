@@ -8,7 +8,6 @@ use Flarum\Testing\integration\TestCase;
 use Flarum\User\User;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Database\ConnectionInterface;
-use Mattoid\MoneyHistory\Event\MoneyAllHistoryEvent;
 use Mattoid\MoneyHistory\Event\MoneyHistoryEvent;
 
 class MoneyHistoryIntegrationTest extends TestCase
@@ -109,7 +108,48 @@ class MoneyHistoryIntegrationTest extends TestCase
     }
 
     /** @test */
-    public function it_records_legacy_events_and_lists_entries_in_descending_order(): void
+    public function it_records_chunked_balance_manager_updates_for_each_user(): void
+    {
+        $firstUser = User::query()->findOrFail(2);
+        $secondUser = User::query()->findOrFail(3);
+        $actor = User::query()->findOrFail(3);
+        $balanceManager = $this->app()->getContainer()->make(BalanceManager::class);
+
+        $firstUser->money = 10.0;
+        $firstUser->save();
+        $secondUser->money = 20.0;
+        $secondUser->save();
+
+        $updatedCount = $balanceManager->adjustBalances(
+            [$firstUser, $secondUser],
+            4.0,
+            'BATCH_REWARD',
+            'money.batch-reward',
+            [],
+            $actor
+        );
+
+        $records = $this->connection()->table('user_money_history')
+            ->whereIn('user_id', [$firstUser->id, $secondUser->id])
+            ->orderBy('user_id')
+            ->get();
+
+        $this->assertSame(2, $updatedCount);
+        $this->assertCount(2, $records);
+
+        $this->assertSame('BATCH_REWARD', $records[0]->source);
+        $this->assertEquals(4.0, (float) $records[0]->balance_delta);
+        $this->assertEquals(10.0, (float) $records[0]->balance_before);
+        $this->assertEquals(14.0, (float) $records[0]->balance_after);
+
+        $this->assertSame('BATCH_REWARD', $records[1]->source);
+        $this->assertEquals(4.0, (float) $records[1]->balance_delta);
+        $this->assertEquals(20.0, (float) $records[1]->balance_before);
+        $this->assertEquals(24.0, (float) $records[1]->balance_after);
+    }
+
+    /** @test */
+    public function it_records_legacy_history_events_and_lists_entries_in_descending_order(): void
     {
         $dispatcher = $this->app()->getContainer()->make(Dispatcher::class);
         $user = User::query()->findOrFail(2);
@@ -120,21 +160,12 @@ class MoneyHistoryIntegrationTest extends TestCase
         $dispatcher->dispatch(new MoneyHistoryEvent(
             $user,
             3,
-            'LEGACY_SINGLE',
+            'LEGACY',
             'money.legacy-single',
             [],
             $actor,
             17,
             20
-        ));
-
-        $dispatcher->dispatch(new MoneyAllHistoryEvent(
-            [$user],
-            -2,
-            'LEGACY_BATCH',
-            'money.legacy-batch',
-            [],
-            $actor
         ));
 
         $records = $this->connection()->table('user_money_history')
@@ -148,11 +179,9 @@ class MoneyHistoryIntegrationTest extends TestCase
             })
             ->values();
 
-        $this->assertCount(2, $records);
-        $this->assertSame('LEGACY_BATCH', $records[0]->source);
+        $this->assertCount(1, $records);
+        $this->assertSame('LEGACY', $records[0]->source);
         $this->assertSame([], $records[0]->source_params);
-        $this->assertSame('LEGACY_SINGLE', $records[1]->source);
-        $this->assertSame([], $records[1]->source_params);
 
         $response = $this->send(
             $this->request('GET', '/api/users/2/money/history', ['authenticatedAs' => 2])
@@ -161,11 +190,9 @@ class MoneyHistoryIntegrationTest extends TestCase
         $payload = json_decode((string) $response->getBody(), true);
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertCount(2, $payload['data']);
-        $this->assertSame('LEGACY_BATCH', $payload['data'][0]['attributes']['source']);
+        $this->assertCount(1, $payload['data']);
+        $this->assertSame('LEGACY', $payload['data'][0]['attributes']['source']);
         $this->assertSame([], $payload['data'][0]['attributes']['source_params']);
-        $this->assertSame('LEGACY_SINGLE', $payload['data'][1]['attributes']['source']);
-        $this->assertSame([], $payload['data'][1]['attributes']['source_params']);
     }
 
     /** @test */

@@ -4,7 +4,7 @@ namespace Mattoid\MoneyHistory\Provider;
 
 use AntoineFr\Money\Contract\BalanceHistoryRecorder;
 use Illuminate\Support\ServiceProvider;
-use Mattoid\MoneyHistory\MoneyHistoryRecorder;
+use Mattoid\MoneyHistory\Service\MoneyHistoryRecorder;
 
 class MoneyHistoryServiceProvider extends ServiceProvider
 {

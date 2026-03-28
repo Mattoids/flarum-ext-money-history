@@ -1,6 +1,6 @@
 <?php
 
-namespace Mattoid\MoneyHistory;
+namespace Mattoid\MoneyHistory\Service;
 
 use AntoineFr\Money\Contract\BalanceHistoryRecorder as BalanceHistoryRecorder;
 use Flarum\User\User;
@@ -31,6 +31,24 @@ class MoneyHistoryRecorder implements BalanceHistoryRecorder
             $actor,
             $balanceBefore,
             $balanceAfter
+        );
+    }
+
+    public function recordMany(
+        array $users,
+        float $balanceDelta,
+        string $source = '',
+        string $sourceKey = '',
+        array $sourceParams = [],
+        ?User $actor = null
+    ): void {
+        $this->historyWriter->writeMany(
+            $users,
+            $balanceDelta,
+            $source,
+            $sourceKey,
+            $sourceParams,
+            $actor
         );
     }
 }
