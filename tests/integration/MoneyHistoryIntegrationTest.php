@@ -45,8 +45,7 @@ class MoneyHistoryIntegrationTest extends TestCase
             'POST_REWARD',
             'money.post-reward',
             [],
-            $actor,
-            $user
+            $actor
         ));
 
         $historyEntry = $this->connection()->table('user_money_history')->where('user_id', $user->id)->first();
@@ -82,8 +81,7 @@ class MoneyHistoryIntegrationTest extends TestCase
             'AUTO_RENEW',
             'money-store.forum.reason.auto-renew',
             $sourceParams,
-            $actor,
-            $user
+            $actor
         ));
 
         $historyEntry = $this->connection()->table('user_money_history')->where('user_id', $user->id)->first();

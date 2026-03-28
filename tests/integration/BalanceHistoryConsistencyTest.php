@@ -45,8 +45,7 @@ class BalanceHistoryConsistencyTest extends TestCase
             'MANUAL_CREDIT',
             'test.manual-credit',
             [],
-            $actor,
-            $user
+            $actor
         ));
 
         $user->refresh();
@@ -57,8 +56,7 @@ class BalanceHistoryConsistencyTest extends TestCase
             'MANUAL_DEBIT',
             'test.manual-debit',
             [],
-            $actor,
-            $user
+            $actor
         ));
 
         $user->refresh();
