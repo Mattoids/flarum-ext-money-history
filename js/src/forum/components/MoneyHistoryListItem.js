@@ -14,6 +14,13 @@ function buildSourceDescription(historyEntry) {
   const translationParams = {};
 
   Object.entries(sourceParams).forEach(([key, value]) => {
+    if (key.endsWith("LinkHref") && typeof value === "string" && value !== "") {
+      translationParams[key.slice(0, -4)] = Link.component({
+        href: value,
+      });
+      return;
+    }
+
     if (value !== null && typeof value === "object") {
       return;
     }
