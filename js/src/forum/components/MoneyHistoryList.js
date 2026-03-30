@@ -89,7 +89,7 @@ export default class MoneyHistoryList extends Component {
           offset,
         },
       })
-      .catch(() => {})
+      .catch(() => { })
       .then(this.parseResults.bind(this));
   }
 }
