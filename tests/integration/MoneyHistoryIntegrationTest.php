@@ -6,9 +6,7 @@ use AntoineFr\Money\Service\BalanceManager;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
 use Flarum\User\User;
-use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Database\ConnectionInterface;
-use Mattoid\MoneyHistory\Event\MoneyHistoryEvent;
 
 class MoneyHistoryIntegrationTest extends TestCase
 {
@@ -146,53 +144,6 @@ class MoneyHistoryIntegrationTest extends TestCase
         $this->assertEquals(4.0, (float) $records[1]->balance_delta);
         $this->assertEquals(20.0, (float) $records[1]->balance_before);
         $this->assertEquals(24.0, (float) $records[1]->balance_after);
-    }
-
-    /** @test */
-    public function it_records_legacy_history_events_and_lists_entries_in_descending_order(): void
-    {
-        $dispatcher = $this->app()->getContainer()->make(Dispatcher::class);
-        $user = User::query()->findOrFail(2);
-        $actor = User::query()->findOrFail(3);
-
-        $user->setAttribute('money', 20);
-
-        $dispatcher->dispatch(new MoneyHistoryEvent(
-            $user,
-            3,
-            'LEGACY',
-            'money.legacy-single',
-            [],
-            $actor,
-            17,
-            20
-        ));
-
-        $records = $this->connection()->table('user_money_history')
-            ->where('user_id', $user->id)
-            ->orderBy('id', 'desc')
-            ->get()
-            ->map(function ($record) {
-                $record->source_params = $record->source_params ? json_decode($record->source_params, true) : null;
-
-                return $record;
-            })
-            ->values();
-
-        $this->assertCount(1, $records);
-        $this->assertSame('LEGACY', $records[0]->source);
-        $this->assertSame([], $records[0]->source_params);
-
-        $response = $this->send(
-            $this->request('GET', '/api/users/2/money/history', ['authenticatedAs' => 2])
-        );
-
-        $payload = json_decode((string) $response->getBody(), true);
-
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertCount(1, $payload['data']);
-        $this->assertSame('LEGACY', $payload['data'][0]['attributes']['source']);
-        $this->assertSame([], $payload['data'][0]['attributes']['source_params']);
     }
 
     /** @test */

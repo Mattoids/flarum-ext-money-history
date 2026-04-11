@@ -8,7 +8,6 @@ return [
         if (! $schema->hasTable('user_money_history')) {
             return;
         }
-
         if ($schema->hasColumn('user_money_history', 'create_user_id') && ! $schema->hasColumn('user_money_history', 'actor_id')) {
             $schema->table('user_money_history', function (Blueprint $table) {
                 $table->renameColumn('create_user_id', 'actor_id');
@@ -41,7 +40,7 @@ return [
 
         if (! $schema->hasColumn('user_money_history', 'source_params')) {
             $schema->table('user_money_history', function (Blueprint $table) {
-                $table->text('source_params')->nullable()->comment('legacy source params');
+                $table->text('source_params')->nullable();
             });
         }
 

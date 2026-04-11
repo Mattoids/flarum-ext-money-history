@@ -14,8 +14,6 @@ use Flarum\Api\Serializer\BasicUserSerializer;
 
 use Mattoid\MoneyHistory\Api\Controller\ListUserMoneyHistoryController;
 use Mattoid\MoneyHistory\Attributes\UserAttributes;
-use Mattoid\MoneyHistory\Listeners\MoneyHistoryListener;
-use Mattoid\MoneyHistory\Event\MoneyHistoryEvent;
 use Mattoid\MoneyHistory\Provider\MoneyHistoryServiceProvider;
 
 return [
@@ -36,7 +34,4 @@ return [
 
     (new Extend\ServiceProvider())
         ->register(MoneyHistoryServiceProvider::class),
-
-    (new Extend\Event())
-        ->listen(MoneyHistoryEvent::class, MoneyHistoryListener::class),
 ];
