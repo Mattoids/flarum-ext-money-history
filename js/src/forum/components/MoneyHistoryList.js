@@ -21,7 +21,7 @@ export default class MoneyHistoryList extends Component {
         <ul style="margin: 0;padding: 0;list-style-type: none;position: relative;">
           {this.historyEntries.map((historyEntry) => {
             return (
-              <li style="padding-top:5px" key={historyEntry.id} data-id={historyEntry.id}>
+              <li style="padding-top:5px" key={historyEntry.id()} data-id={historyEntry.id()}>
                 {MoneyHistoryListItem.component({ historyEntry })}
               </li>
             );
