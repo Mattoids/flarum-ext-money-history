@@ -15,8 +15,14 @@
     },
     "require": {
         "flarum/core": "^1.2.0",
-        "antoinefr/flarum-ext-money": "^1.3"
+        "antoinefr/flarum-ext-money": "*"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/huoxin233/flarum-ext-money.git"
+        }
+    ],
     "authors": [
         {
             "name": "mattoid",
@@ -62,7 +68,8 @@
     "prefer-stable": true,
     "autoload-dev": {
         "psr-4": {
-            "Mattoid\\MoneyHistory\\Tests\\": "tests/"
+            "Mattoid\\MoneyHistory\\Tests\\": "tests/",
+            "AntoineFr\\Money\\": "../../flarum-ext-money-master/src/"
         }
     },
     "scripts": {
@@ -81,6 +88,7 @@
         "test:setup": "Sets up a database for use with integration tests. Execute this only once."
     },
     "require-dev": {
-        "flarum/testing": "^1.0.0"
+        "flarum/testing": "^1.0.0",
+        "antoinefr/flarum-ext-money": "dev-huoxin/support-money-history"
     }
 }
