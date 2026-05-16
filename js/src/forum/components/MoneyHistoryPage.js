@@ -10,7 +10,7 @@ export default class MoneyHistoryPage extends UserPage {
 
   content() {
     return (
-      <div className="Post-body">
+      <div className="MoneyHistoryPage-content">
         {MoneyHistoryList.component({
           params: {
             user: this.user,
