@@ -1,11 +1,18 @@
 {
     "name": "mattoid/flarum-ext-money-history",
-    "description": "money history",
+    "description": "Allow users to track any changes made to their money",
     "keywords": [
-        "flarum"
+        "flarum",
+        "money",
+        "history"
     ],
     "type": "flarum-extension",
     "license": "LPL-1.02",
+    "support": {
+        "issues": "https://github.com/Mattoids/flarum-ext-money-history/issues",
+        "source": "https://github.com/Mattoids/flarum-ext-money-history",
+        "forum": "https://discuss.flarum.org/d/PUT_DISCUSS_SLUG_HERE"
+    },
     "require": {
         "flarum/core": "^1.2.0",
         "antoinefr/flarum-ext-money": "^1.3"
@@ -25,11 +32,11 @@
     "extra": {
         "flarum-extension": {
             "title": "Money History",
-            "category": "",
+            "category": "feature",
             "icon": {
-                "name": "",
-                "color": "",
-                "backgroundColor": ""
+                "name": "fas fa-file-invoice-dollar",
+                "color": "#fff",
+                "backgroundColor": "#3066BE"
             }
         },
         "flarum-cli": {

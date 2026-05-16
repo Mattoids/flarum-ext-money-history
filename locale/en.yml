@@ -1,21 +1,21 @@
 mattoid-money-history:
   admin:
     settings:
-      query-others-history: View Others' Records
+      query-others-history: View other user money history
   forum:
-    nav: money history
-    title: money history
-    list-empty: record was not found
-    money-list-load-more: Read more
+    nav: Money History
+    title: Money History
+    list-empty: Record Not Found
+    money-list-load-more: Read More
     record:
       from: from
-      money-out: Charging
-      money-in: reward
-      money-list-type: type
-      money-list-assign-at: time
+      money-out: Deduction
+      money-in: Reward
+      money-list-type: Type
+      money-list-assign-at: Time
       money-list-id: ID
-      money-list-from-user: operator
-      money-list-target-user: Operation account
-      money-list-amount: amount
-      money-list-transfer-notes: purpose
-      money-list-balance: balance
+      money-list-from-user: Operator
+      money-list-target-user: Operation Account
+      money-list-amount: Amount
+      money-list-transfer-notes: Purpose
+      money-list-balance: Balance
